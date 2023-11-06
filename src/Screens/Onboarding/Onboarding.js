@@ -22,7 +22,7 @@ const slides = [
   }
 ]
 
-const Welcome = ({ navigation }) => {
+const Onboarding = ({ navigation }) => {
 
 
   StatusBar.setBarStyle('light-content', true);
@@ -89,11 +89,11 @@ const Welcome = ({ navigation }) => {
       renderNextButton={() => buttonLabel("Next")}
       renderSkipButton={() => buttonLabel("Skip")}
       renderDoneButton={() => buttonLabel("Next")}
-      onSkip={() => navigation.navigate("Onboarding")}
-      onDone={() => navigation.navigate("Onboarding")}
+      onSkip={() => navigation.navigate("BottomTab")}
+      onDone={() => navigation.navigate("BottomTab")}
 
     />
   )
 }
 
-export default Welcome
+export default Onboarding

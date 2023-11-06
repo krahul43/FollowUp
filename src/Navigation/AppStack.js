@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '../Screens/Splash/Splash';
 import Home from '../Screens/Home/Home';
 import Onboarding from '../Screens/Onboarding/Onboarding';
+import BottomTab from './BottomTab'
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +16,7 @@ const AppStack = ({ navigation }) => {
     useEffect(() => {
         setTimeout(() => {
             setShowWellcome(false)
-        }, 3000);
+        }, 6000);
 
     }, []);
 
@@ -54,6 +55,7 @@ const AppStack = ({ navigation }) => {
                 )} */}
                  <Stack.Screen name="Onboarding" component={Onboarding} />
                 <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="BottomTab" component={BottomTab} />
 
             </Stack.Navigator>
         // )
