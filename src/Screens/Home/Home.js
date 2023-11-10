@@ -1,18 +1,22 @@
 import { StyleSheet, Text, FlatList, View, SafeAreaView,Image,Dimensions, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import HomeItem from '../../Components/HomeItem/HomeItem'
 import AddButton from '../../Components/AddButton/AddButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import { FetchData } from '../../redux/FetchData/FetchData';
 
-const data = [
-  { image: require('../../assets/pencil.png'), name: 'Name 1', time: 'Time 1', anotherImage: require('../../assets/pencil.png') },
-  { image: require('../../assets/phone-call.png'), name: 'Name 2', time: 'Time 2', anotherImage: require('../../assets/pencil.png') },
-  { image: require('../../assets/pencil.png'), name: 'Name 1', time: 'Time 1', anotherImage: require('../../assets/pencil.png') },
-  { image: require('../../assets/phone-call.png'), name: 'Name 2', time: 'Time 2', anotherImage: require('../../assets/pencil.png') },
-  { image: require('../../assets/pencil.png'), name: 'Name 1', time: 'Time 1', anotherImage: require('../../assets/pencil.png') },
-  { image: require('../../assets/phone-call.png'), name: 'Name 2', time: 'Time 2', anotherImage: require('../../assets/pencil.png') },
- ];
+ const circleDiameter = Dimensions.get('window').width
+ const circleDiameterHeight = Dimensions.get('window').height
 
 const Home = ({navigation}) => {
+  const [DataGet, setDataGet] = useState(null);
+  const dispatch = useDispatch();
+  const products = useSelector(state => state);
+  useEffect(() => {
+    dispatch(FetchData());
+  }, []);
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.txtMain}>
@@ -25,10 +29,11 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={data}
-        keyExtractor={(item, index) => index.toString()}
+       data={products.product.data.slice().reverse()} // Reversed array
+       keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => <HomeItem item={item} />}
       />
+    
     <View style={styles.btnMain}>
       <AddButton style={styles.Addbtn} />
       </View>
@@ -65,15 +70,15 @@ const styles = StyleSheet.create({
     fontWeight:'700'
   },
   image: {
-    width: 35, 
-    height: 35,
+    width:circleDiameter*0.08 , 
+    height: circleDiameterHeight*0.04,
   },
   btnMain:{
     alignSelf:'center',
     alignItems:'flex-end',
     justifyContent:'flex-end',
     position:'absolute',
-    bottom:10
+    bottom:50
   }
 
 })

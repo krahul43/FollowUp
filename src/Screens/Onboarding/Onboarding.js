@@ -89,8 +89,8 @@ const Onboarding = ({ navigation }) => {
       renderNextButton={() => buttonLabel("Next")}
       renderSkipButton={() => buttonLabel("Skip")}
       renderDoneButton={() => buttonLabel("Next")}
-      onSkip={() => navigation.navigate("BottomTab")}
-      onDone={() => navigation.navigate("BottomTab")}
+      onSkip={() => {navigation.navigate("Home"),AsyncStorage.setItem('isAppFirstLaunched','true') }}
+      onDone={() => { navigation.navigate("Home"),AsyncStorage.setItem('isAppFirstLaunched','true') }}
 
     />
   )

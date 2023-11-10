@@ -7,6 +7,7 @@ import Snooze from '../Snooze/Snooze';
 import ImageBox from '../ImageBox/ImageBox';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const HomeItem = ({ item }) => {
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
@@ -16,8 +17,8 @@ const HomeItem = ({ item }) => {
             <View style={styles.txtContainer}>
                 <ImageBox item={item} />
                 <View>
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.time}>{item.time}</Text>
+                    <Text style={styles.name}>{item.selectedDropdownContact}</Text>
+                    <Text style={styles.time}>{item.selectedDropdownReminder}</Text>
                 </View>
             </View>
             <View style={styles.buttnMain}>
@@ -32,7 +33,7 @@ const HomeItem = ({ item }) => {
                     style={[styles.touchableOpacityView, { borderColor: '#000' }]}
                 >
                     <Image
-                        source={item.anotherImage}
+                        source={require('../../assets/pencil.png')}
                         style={styles.anotherImage1}
                     />
                 </TouchableOpacity>
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     anotherImage1: {
-        width: 22,
-        height: 22,
+        width: windowWidth*0.05, 
+        height: windowHeight*0.025,
     },
     touchableOpacityView: {
 

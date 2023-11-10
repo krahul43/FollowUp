@@ -1,43 +1,54 @@
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
-const styles = StyleSheet.create({})
-import { StyleSheet, Text, View, Image,Dimensions } from 'react-native'
-import React from 'react'
+const AddReminderImage = ({ ReminderImage, txtHeading, onSelect, isSelected }) => {
+  const circleDiameter = Dimensions.get('window').width;
 
-const AddReminderImage = ({ ReminderImage,txtHeading }) => {
-    const circleDiameter = Dimensions.get('window').width
-    
-    const styles = StyleSheet.create({
-        circle: {
-          width: circleDiameter*0.19,
-          height: circleDiameter*0.16,
-          borderRadius: 10, // Make it a circle
-          backgroundColor: '#0a8960', // Background color
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginLeft:10
-        },
-        image: {
-          width: 25, // Adjust the image size to fit within the circle
-          height: 25,
-        },
-        txt: {
-            textAlign: 'center',
-            marginTop:3,
-            fontSize: 18,
-            color: '#fff',
-            fontWeight: '600'
-        },
-      });
-    return (
-        <View style={styles.circle}>
-            <Image
-                source={ReminderImage}
-                style={styles.image}
-            />
-             <Text style={styles.txt}>{txtHeading}</Text>
-        </View>
-    )
-}
+  const handlePress = () => {
+    onSelect(txtHeading);
+  };
 
-export default AddReminderImage
+  const circleStyles = {
+    width: circleDiameter * 0.19,
+    height: circleDiameter * 0.16,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+    backgroundColor: isSelected ? '#0a8960' : 'transparent',
+    borderColor: '#0a8960',
+    borderWidth: isSelected ? 0 : 1,
+  };
 
+  const imageStyles = {
+    width: 25,
+    height: 25,
+  };
+
+  const txtStyles = {
+    textAlign: 'center',
+    marginTop: 3,
+    fontSize: 18,
+    color: isSelected ? '#fff' : '#000',
+    fontWeight: '600',
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={handlePress}>
+      <View style={circleStyles}>
+        <Image source={ReminderImage} style={imageStyles} />
+        <Text style={txtStyles}>{txtHeading}</Text>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
+
+export default AddReminderImage;

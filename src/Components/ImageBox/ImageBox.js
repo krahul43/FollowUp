@@ -3,6 +3,17 @@ import React from 'react'
 
 const ImageBox = ({ item }) => {
     const circleDiameter = Dimensions.get('window').width
+    const circleDiameterHeight = Dimensions.get('window').height
+
+    let PencilImg=require('../../assets/pencil.png')
+    let CallImg=require('../../assets/pencil.png')
+    let MeetImg=require('../../assets/pencil.png')
+
+    const buttonImageMap = {
+      Text: require('../../assets/message.png'),
+      Call: require('../../assets/phone-call.png'),
+      Meet: require('../../assets/Handshake.png'),
+    };
     
     const styles = StyleSheet.create({
         circle: {
@@ -14,14 +25,14 @@ const ImageBox = ({ item }) => {
           alignItems: 'center',
         },
         image: {
-          width: 35, // Adjust the image size to fit within the circle
-          height: 35,
+          width: circleDiameter*0.07, // Adjust the image size to fit within the circle
+          height: circleDiameterHeight*0.035,
         },
       });
     return (
         <View style={styles.circle}>
             <Image
-                source={item.image}
+                source={buttonImageMap[item.selectedButton]}
                 style={styles.image}
             />
         </View>

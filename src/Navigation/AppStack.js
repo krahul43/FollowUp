@@ -73,6 +73,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Splash from '../Screens/Splash/Splash';
 import BottomTab from './BottomTab'
+import Home from '../Screens/Home/Home';
+import Setting from '../Screens/Setting/Setting';
 import Onboarding from '../Screens/Onboarding/Onboarding';
 
 const Stack = createNativeStackNavigator();
@@ -108,10 +110,14 @@ const AppStack = ({ navigation }) => {
       {isFirstTimeUser ? (
         <>
         <Stack.Screen name="Onboarding" component={Onboarding} />
-        <Stack.Screen name="BottomTab" component={BottomTab} />
+        <Stack.Screen name="Home" component={Home} />  
+        <Stack.Screen name="Setting" component={Setting} />
         </> 
       ) : (
-        <Stack.Screen name="BottomTab" component={BottomTab} />
+        <>
+        <Stack.Screen name="Home" component={Home} />  
+        <Stack.Screen name="Setting" component={Setting} />
+        </>
       )}
     </Stack.Navigator>
   );
