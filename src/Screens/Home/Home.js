@@ -4,19 +4,14 @@ import HomeItem from '../../Components/HomeItem/HomeItem'
 import AddButton from '../../Components/AddButton/AddButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import { FetchData } from '../../redux/FetchData/FetchData';
 
  const circleDiameter = Dimensions.get('window').width
  const circleDiameterHeight = Dimensions.get('window').height
 
 const Home = ({navigation}) => {
-  const [DataGet, setDataGet] = useState(null);
   const dispatch = useDispatch();
-  const products = useSelector(state => state);
-  useEffect(() => {
-    dispatch(FetchData());
-  }, []);
-
+  const reminders = useSelector(state => state.reminders);
+ 
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.txtMain}>
@@ -29,9 +24,9 @@ const Home = ({navigation}) => {
         </TouchableOpacity>
       </View>
       <FlatList
-       data={products.product.data.slice().reverse()} // Reversed array
+       data={reminders?.reminders} // Reversed array
        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <HomeItem item={item} />}
+        renderItem={({ item,index }) => <HomeItem item={item} index={index} />}
       />
     
     <View style={styles.btnMain}>

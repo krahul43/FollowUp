@@ -5,6 +5,8 @@ import AddReminderImage from '../AddReminderImage/AddReminderImage'
 import Contacts from 'react-native-contacts';
 import { ReminderTimeData } from '../StaticData/StaticData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import { addReminder } from '../../redux/reminderActions/reminderActions';
 
 const AddReminder = ({ actionSheetBrand }) => {
     const [contacts, setContacts] = useState([]);
@@ -49,28 +51,9 @@ const AddReminder = ({ actionSheetBrand }) => {
         }
     };
 
-    
-      const handleSaveToStorage = async () => {
-        // Create or update the array in AsyncStorage
-        try {
-          const existingArray = await AsyncStorage.getItem('ReminderData');
-          let newArray = existingArray ? JSON.parse(existingArray) : [];
-    
-          // Add or update values in the array
-          newArray = [
-            ...newArray,
-            {
-              selectedButton,
-              selectedDropdownContact,
-              selectedDropdownReminder,
-            },
-          ];
-    
-          // Save the updated array to AsyncStorage
-          await AsyncStorage.setItem('ReminderData', JSON.stringify(newArray));
-        } catch (error) {
-          console.error('Error saving data to AsyncStorage:', error);
-        }
+      const handleSaveToStorage = () => {
+        dispatch(addReminder(selectedButton, selectedDropdownContact, selectedDropdownReminder));
+        // Dispatches an action to add the reminder to the Redux store
       };
     return (
         <View>

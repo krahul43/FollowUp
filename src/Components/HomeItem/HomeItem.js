@@ -5,12 +5,18 @@ import { Dimensions } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Snooze from '../Snooze/Snooze';
 import ImageBox from '../ImageBox/ImageBox';
+import {useDispatch, useSelector} from 'react-redux';
+import { deleteReminder } from '../../redux/reminderActions/reminderActions';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const HomeItem = ({ item }) => {
+const HomeItem = ({ item,index }) => {
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    const dispatch = useDispatch();
+    const handleDelete = () => {
+      dispatch(deleteReminder(index));
+    };
 
     return (
         <View style={styles.container}>
@@ -26,7 +32,7 @@ const HomeItem = ({ item }) => {
                     onFillColor={{ true: '#000', false: 'red' }}
                     boxType='square'
                     value={toggleCheckBox}
-                    onValueChange={(newValue) => setToggleCheckBox(newValue)}
+                    onValueChange={(newValue) => {setToggleCheckBox(newValue),handleDelete()}}
                 />
                 <Snooze />
                 <TouchableOpacity
