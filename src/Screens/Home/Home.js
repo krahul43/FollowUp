@@ -24,7 +24,7 @@ const Home = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
-      {reminders?.reminders !== null ?
+      {reminders?.reminders.length > 0  ?
         <FlatList
           data={reminders?.reminders} // Reversed array
           keyExtractor={(item, index) => index.toString()}
@@ -84,8 +84,10 @@ const styles = StyleSheet.create({
     bottom: 50
   },
   homeDefault: {
-    width: circleDiameter * 0.6,
-    height: circleDiameterHeight * 1.2,
+    alignSelf:'center',
+    marginTop:circleDiameter*0.32,
+    width: circleDiameter * 0.5,
+    height: circleDiameterHeight * 0.4,
   },
 
 })

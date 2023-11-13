@@ -43,8 +43,9 @@ const HomeItem = ({ item, index }) => {
     
         return output;
     }
-
     const formattedTimeRemaining = formatTime(selectedDropdownReminder);
+    const reminderTime = moment(selectedDropdownReminder);
+    const textColor = moment().isAfter(reminderTime) ? 'red' : 'black';
 
     return (
         <View style={styles.container}>
@@ -52,7 +53,7 @@ const HomeItem = ({ item, index }) => {
                 <ImageBox item={item} />
                 <View>
                     <Text style={styles.name}>{item.selectedDropdownContact}</Text>
-                    <Text style={styles.time}>{formattedTimeRemaining}</Text>
+                    <Text style={[styles.time,{color:textColor}]}>{formattedTimeRemaining}</Text>
                 </View>
             </View>
             <View style={styles.buttnMain}>
