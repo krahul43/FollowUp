@@ -1,15 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 
-const DropdownItem = ({ dropdownData, onValueChange }) => {
-  const [value, setValue] = useState(null);
+const DropdownItem = ({ dropdownData, onValueChange,Editvalue,placeholder }) => {
+  const [value, setValue] = useState(Editvalue);
   const [isFocus, setIsFocus] = useState(false);
-
+  console.log(value, 'selectedDropdownReminder')
   const handleValueChange = (item) => {
     setValue(item.value);
     onValueChange(item.value); // Callback to parent component
   };
+  useEffect(() => {
+    setValue(Editvalue);
+  }, [Editvalue]);
+
 
   return (
     <View style={styles.dpView}>
@@ -21,14 +25,14 @@ const DropdownItem = ({ dropdownData, onValueChange }) => {
         }}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
+        // inputSearchStyle={styles.inputSearchStyle}
+        // iconStyle={styles.iconStyle}
         data={dropdownData}
         // search
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Select Time"
+        placeholder={placeholder}
         value={value}
         onChange={handleValueChange}
       />

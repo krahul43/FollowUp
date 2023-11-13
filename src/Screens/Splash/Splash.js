@@ -5,7 +5,7 @@ import * as Animatable from 'react-native-animatable';
 const Splash = ({navigation}) => {
     return (
         <View style={styles.viewtxt}>
-        <Animatable.Text style={styles.txt} duration={200} animation='fadeInDown'>FollowUp</Animatable.Text>
+        <Animatable.Text style={styles.txt} duration={100} animation='fadeInDown'>FollowUp</Animatable.Text>
         </View>
     )
 }

@@ -1,3 +1,4 @@
+
 import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from '@react-native-async-storage/async-storage';
@@ -5,15 +6,23 @@ import { combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
 const initialState = {
-  reminders: [],
+  reminders: [], // To be updated from the persisted state if available
+  lastId: 0, // Initialize the last used ID
 };
 
 const reminderReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_REMINDER':
+      const newReminder = {
+        id: state.lastId + 1, // Generate a unique ID for each new reminder
+        selectedButton: action.payload.selectedButton,
+        selectedDropdownContact: action.payload.selectedDropdownContact,
+        selectedDropdownReminder: action.payload.selectedDropdownReminder,
+      };
       return {
         ...state,
-        reminders: [...state.reminders, action.payload],
+        reminders: [...state.reminders, newReminder],
+        lastId: state.lastId + 1, // Increment the last used ID
       };
     case 'DELETE_REMINDER':
       return {
@@ -23,14 +32,18 @@ const reminderReducer = (state = initialState, action) => {
     case 'UPDATE_REMINDER':
       return {
         ...state,
-        reminders: state.reminders.map((reminder, index) => {
-          if (index === action.payload.index) {
-            return { ...reminder, ...action.payload.updatedData };
+        reminders: state.reminders.map(reminder => {
+          if (reminder.id === action.payload.id) {
+            return {
+              ...reminder,
+              selectedButton: action.payload.selectedButton,
+              selectedDropdownContact: action.payload.selectedDropdownContact,
+              selectedDropdownReminder: action.payload.selectedDropdownReminder,
+            };
           }
           return reminder;
         }),
       };
-   
     default:
       return state;
   }
@@ -55,3 +68,4 @@ const store = createStore(
 
 export const persistor = persistStore(store);
 export default store;
+

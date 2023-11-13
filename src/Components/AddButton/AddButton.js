@@ -6,7 +6,6 @@ import AddReminder from '../AddReminder/AddReminder';
 
 const AddButton = ({ style, onPress }) => {
   const actionSheetBrand = createRef()
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   return (
     <>
       <TouchableOpacity onPress={() => actionSheetBrand.current?.show()} style={[styles.button, style]}>

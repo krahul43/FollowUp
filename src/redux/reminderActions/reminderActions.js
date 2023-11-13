@@ -1,18 +1,19 @@
+let nextId = 0; 
 export const addReminder = (selectedButton, selectedDropdownContact, selectedDropdownReminder) => {
-    return (dispatch) => {
-      // Simulating an async operation (API call, timeout, etc.)
-      setTimeout(() => {
-        dispatch({
-          type: 'ADD_REMINDER',
-          payload: {
-            selectedButton: selectedButton,
-            selectedDropdownContact: selectedDropdownContact,
-            selectedDropdownReminder: selectedDropdownReminder,
-          },
-        });
-      }, 500); // Delay for simulation purposes
-    };
+  return (dispatch) => {
+    // Generate a unique ID for the new reminder
+    const newId = nextId++;
+    dispatch({
+      type: 'ADD_REMINDER',
+      payload: {
+        id: newId,
+        selectedButton: selectedButton,
+        selectedDropdownContact: selectedDropdownContact,
+        selectedDropdownReminder: selectedDropdownReminder,
+      },
+    });
   };
+};
   
   export const deleteReminder = (index) => {
     return {
@@ -21,10 +22,10 @@ export const addReminder = (selectedButton, selectedDropdownContact, selectedDro
     };
   };
   
-  export const updateReminder = (index, updatedData) => {
+  export const updateReminder = (id, selectedButton, selectedDropdownContact, selectedDropdownReminder) => {
     return {
       type: 'UPDATE_REMINDER',
-      payload: { index, updatedData },
+      payload: { id, selectedButton, selectedDropdownContact, selectedDropdownReminder },
     };
   };
 

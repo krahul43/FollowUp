@@ -92,7 +92,7 @@ const AppStack = ({ navigation }) => {
         // Hide the splash screen after some time
         setTimeout(() => {
           setShowSplash(false);
-        }, 3000); // Adjust the time as needed
+        }, 2000); // Adjust the time as needed
       } catch (error) {
         console.error('Error checking first-time user:', error);
       }

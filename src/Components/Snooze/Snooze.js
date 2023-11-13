@@ -1,15 +1,32 @@
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { updateReminder } from '../../redux/reminderActions/reminderActions';
 
-const Snooze = () => {
-
-    const [count, setCount] = useState(0);
+const Snooze = ({TimeData}) => {
     const [boxColor, setBoxColor] = useState('#000');
-  
-    const handlePress = () => {
-      setCount(count + 1);
-      setBoxColor('#000'); // Change the border color when clicked
-    };
+   
+    const [timeAdded, setTimeAdded] = useState(null);
+    const dispatch = useDispatch();
+
+  const handlePress = () => {
+    let TimeSnoozeAdd='1 hour'
+    const timeValue = parseInt(TimeSnoozeAdd);
+    const timeUnit = TimeSnoozeAdd.includes('hour') ? 'hours' : 'minutes';
+
+    const currentTime = new Date(TimeData.selectedDropdownReminder);
+    const newTime = new Date(currentTime.getTime() + timeValue * (timeUnit === 'hours' ? 60 * 60 * 1000 : 60 * 1000));
+
+    setTimeAdded(newTime);
+    setBoxColor('#c4ff4d');
+  };
+
+  useEffect(() => {
+    if (timeAdded) {
+      dispatch(updateReminder(TimeData.id, TimeData.selectedButton, TimeData.selectedDropdownContact, timeAdded));
+    }
+  }, [timeAdded, dispatch]);
+
 
     return (
       <TouchableOpacity
