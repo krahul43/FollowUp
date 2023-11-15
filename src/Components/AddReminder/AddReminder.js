@@ -14,6 +14,7 @@ const AddReminder = ({ actionSheetBrand }) => {
     const [selectedDropdownContact, setSelectedDropdownContact] = useState(null);
     const [selectedDropdownReminder, setSelectedDropdownReminder] = useState(null);
     const [timeAdded, setTimeAdded] = useState(null);
+    console.log(contacts,'comtacts')
     const dispatch = useDispatch();
     useEffect(() => {
         Contacts.getAll().then(contacts => {

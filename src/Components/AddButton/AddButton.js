@@ -1,57 +1,5 @@
-
-// import React, { useState, createRef } from 'react';
-// import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-// import BottomActionSheet from '../BottomActionSheet/BottomActionSheet';
-// import AddReminder from '../AddReminder/AddReminder';
-
-// const AddButton = ({ style, onPress }) => {
-//   const actionSheetBrand = createRef()
-//   return (
-//     <>
-//       <TouchableOpacity onPress={() => actionSheetBrand.current?.show()} style={[styles.button, style]}>
-//         <Text style={styles.text}>Add Reminder</Text>
-//       </TouchableOpacity>
-//       <BottomActionSheet 
-//       containerStyle={{
-//         borderTopLeftRadius:25,
-//         borderTopRightRadius:25
-//       }}
-//       indicatorStyle={{
-//         width:100
-//       }}
-//       gestureEnabled={true}
-//       ref={actionSheetBrand} title={'Title'}
-   
-//       >
-//         <AddReminder actionSheetBrand={actionSheetBrand}
-//         />
-
-//       </BottomActionSheet>
-//     </>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   button: {
-//     padding: 10,
-//     borderRadius: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   text: {
-//     color: 'white',
-//     fontSize: 18,
-//     fontWeight: '700'
-//   },
-// });
-
-// export default AddButton;
-
-
-
-
 import React, { useState, createRef, useEffect } from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import BottomActionSheet from '../BottomActionSheet/BottomActionSheet';
 import AddReminder from '../AddReminder/AddReminder';
 import Contacts from 'react-native-contacts';
@@ -64,7 +12,7 @@ const AddButton = ({ style, onPress }) => {
   useEffect(() => {
     const checkContactPermission = async () => {
       try {
-        const result = await check(PERMISSIONS.IOS.CONTACTS);
+        const result = await checkPlatformPermission();
         setPermissionGranted(result === RESULTS.GRANTED);
       } catch (error) {
         console.log("Permission check error:", error);
@@ -73,24 +21,44 @@ const AddButton = ({ style, onPress }) => {
     checkContactPermission();
   }, []);
 
-  const requestContactPermission = async () => {
-    try {
-      const result = await request(PERMISSIONS.IOS.CONTACTS);
-      setPermissionGranted(result === RESULTS.GRANTED);
-      if (result === RESULTS.GRANTED) {
-        actionSheetBrand.current?.show();
-      }
-    } catch (error) {
-      console.log("Permission request error:", error);
-    }
+  const checkPlatformPermission = async () => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CONTACTS
+        : PERMISSIONS.ANDROID.READ_CONTACTS;
+
+    return check(permission);
   };
 
-  const openBottomSheet = () => {
-    if (permissionGranted) {
-      actionSheetBrand.current?.show();
-    } else {
-      requestContactPermission();
+  const requestPlatformPermission = async () => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CONTACTS
+        : PERMISSIONS.ANDROID.READ_CONTACTS;
+
+    return request(permission);
+  };
+
+  const openBottomSheet = async () => {
+    if (!permissionGranted) {
+      const result = await requestPlatformPermission();
+
+      if (result !== RESULTS.GRANTED) {
+        // Show alert only if the permission is denied
+        Alert.alert(
+          'Permission Required',
+          'This feature requires access to your contacts. Please enable the contact permission in your device settings.',
+          [
+            { text: 'OK', onPress: () => {} }
+          ]
+        );
+        return; // Do not proceed if permission is not granted
+      }
     }
+
+    // Permission has been granted at this point
+    setPermissionGranted(true);
+    actionSheetBrand.current?.show();
   };
 
   return (
@@ -131,4 +99,7 @@ const styles = StyleSheet.create({
 });
 
 export default AddButton;
+
+
+
 

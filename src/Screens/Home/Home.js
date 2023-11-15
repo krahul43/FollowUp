@@ -4,6 +4,7 @@ import HomeItem from '../../Components/HomeItem/HomeItem'
 import AddButton from '../../Components/AddButton/AddButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
+import HomePopUp from '../../Components/HomePopUp/HomePopUp';
 
 const circleDiameter = Dimensions.get('window').width
 const circleDiameterHeight = Dimensions.get('window').height
@@ -36,6 +37,7 @@ const Home = ({ navigation }) => {
           style={styles.homeDefault}
         />
       }
+         {/* <HomePopUp /> */}
 
       <View style={styles.btnMain}>
         <AddButton style={styles.Addbtn} />

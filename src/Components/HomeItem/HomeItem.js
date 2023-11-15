@@ -10,6 +10,7 @@ import EditReminder from '../EditReminder/EditReminder';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteReminder } from '../../redux/reminderActions/reminderActions';
 import moment from 'moment';
+import HomePopUp from '../HomePopUp/HomePopUp';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -17,6 +18,7 @@ const windowHeight = Dimensions.get('window').height;
 const HomeItem = ({ item, index }) => {
     const actionSheetEditReminder = createRef()
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    // const [textColor, setTextColor] = useState(moment().isAfter(reminderTime) ? 'red' : 'black');
     const dispatch = useDispatch();
    const [deletePending, setDeletePending] = useState(false);
 
@@ -28,6 +30,7 @@ const HomeItem = ({ item, index }) => {
             setDeletePending(false);
         }, 1500); 
     };
+    
     const selectedDropdownReminder = item.selectedDropdownReminder; // Replace this with your time
    
     function formatTime(selectedDropdownReminder) {
@@ -46,8 +49,10 @@ const HomeItem = ({ item, index }) => {
     const formattedTimeRemaining = formatTime(selectedDropdownReminder);
     const reminderTime = moment(selectedDropdownReminder);
     const textColor = moment().isAfter(reminderTime) ? 'red' : 'black';
-
+    const modalOpen= moment().isSame(reminderTime) ? 'true' : 'false';
+console.log(reminderTime.toLocaleString(),'reminderTime')
     return (
+        <>
         <View style={styles.container}>
             <View style={styles.txtContainer}>
                 <ImageBox item={item} />
@@ -88,7 +93,10 @@ const HomeItem = ({ item, index }) => {
 
                 </BottomActionSheet>
             </View>
+            
         </View>
+        <HomePopUp dataModal={modalOpen} reminderTime={reminderTime} mainData={item}/>
+        </>
     );
 };
 

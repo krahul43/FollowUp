@@ -5,10 +5,6 @@ const ImageBox = ({ item }) => {
     const circleDiameter = Dimensions.get('window').width
     const circleDiameterHeight = Dimensions.get('window').height
 
-    let PencilImg=require('../../assets/pencil.png')
-    let CallImg=require('../../assets/pencil.png')
-    let MeetImg=require('../../assets/pencil.png')
-
     const buttonImageMap = {
       Text: require('../../assets/message.png'),
       Call: require('../../assets/phone-call.png'),

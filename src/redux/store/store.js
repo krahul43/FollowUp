@@ -49,14 +49,40 @@ const reminderReducer = (state = initialState, action) => {
   }
 };
 
+// Initial state for contacts
+const initialContactsState = {
+  contacts: [],
+};
+
+// Reducer for contacts
+const contactsReducer = (state = initialContactsState, action) => {
+  switch (action.type) {
+    case 'ADD_CONTACT':
+      const newContact = {
+        id: state.contacts.length + 1,
+        givenName: action.payload.givenName,
+        familyName: action.payload.familyName,
+        // Add other properties for the new contact based on your requirements
+      };
+      return {
+        ...state,
+        contacts: [...state.contacts, newContact],
+      };
+    // Add other actions for contacts if needed
+    default:
+      return state;
+  }
+};
+
 const rootReducer = combineReducers({
   reminders: reminderReducer,
+  contacts: contactsReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['reminders'],
+  whitelist: ['reminders','contacts'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

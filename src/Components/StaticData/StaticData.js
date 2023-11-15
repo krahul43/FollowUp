@@ -1,5 +1,5 @@
 export const ReminderTimeData = [
-    { label: '', value: '1' },
+    { label: '2 minutes', value: '2 minutes' },
     { label: '15 minutes', value: '15 minutes' },
     { label: '30 minutes', value: '30 minutes' },
     { label: '1 hour', value: '1 hour' },
