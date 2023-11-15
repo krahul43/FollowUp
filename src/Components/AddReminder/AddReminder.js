@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, Text, Image, Dimensions, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, Image, Dimensions, PermissionsAndroid,View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import DropdownItem from '../DropdownItem/DropdownItem'
 import AddReminderImage from '../AddReminderImage/AddReminderImage'
@@ -17,10 +17,22 @@ const AddReminder = ({ actionSheetBrand }) => {
     console.log(contacts,'comtacts')
     const dispatch = useDispatch();
     useEffect(() => {
-        Contacts.getAll().then(contacts => {
-            setContacts(contacts);
+        Contacts.checkPermission().then(permission => {
+          console.log('Permission status:', permission);
+          if (permission === 'authorized') {
+            Contacts.getAll()
+              .then(contacts => {
+                console.log('contacts -> ', contacts);
+                setContacts(contacts);
+              })
+              .catch(err => {
+                console.warn('Error fetching contacts:', err);
+              });
+          } else {
+            console.warn('Permission to access contacts was not granted');
+          }
         });
-    }, []);
+      }, []);
     const contactNames = contacts.map((contact) => {
         const givenName = contact.givenName || '';
         const familyName = contact.familyName || '';

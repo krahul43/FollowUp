@@ -1,5 +1,5 @@
 import React, { useState, createRef, useEffect } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Alert, PermissionsAndroid,Platform } from 'react-native';
 import BottomActionSheet from '../BottomActionSheet/BottomActionSheet';
 import AddReminder from '../AddReminder/AddReminder';
 import Contacts from 'react-native-contacts';
@@ -18,6 +18,7 @@ const AddButton = ({ style, onPress }) => {
         console.log("Permission check error:", error);
       }
     };
+
     checkContactPermission();
   }, []);
 
@@ -27,7 +28,8 @@ const AddButton = ({ style, onPress }) => {
         ? PERMISSIONS.IOS.CONTACTS
         : PERMISSIONS.ANDROID.READ_CONTACTS;
 
-    return check(permission);
+    const result = await check(permission);
+    return result;
   };
 
   const requestPlatformPermission = async () => {
@@ -36,7 +38,8 @@ const AddButton = ({ style, onPress }) => {
         ? PERMISSIONS.IOS.CONTACTS
         : PERMISSIONS.ANDROID.READ_CONTACTS;
 
-    return request(permission);
+    const result = await request(permission);
+    return result;
   };
 
   const openBottomSheet = async () => {
@@ -83,6 +86,7 @@ const AddButton = ({ style, onPress }) => {
     </>
   );
 };
+
 
 const styles = StyleSheet.create({
   button: {

@@ -1,6 +1,6 @@
 
 import React, { useState, createRef } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Image, Text, TouchableOpacity, StyleSheet,Platform } from 'react-native';
 import { Dimensions } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Snooze from '../Snooze/Snooze';
@@ -18,7 +18,6 @@ const windowHeight = Dimensions.get('window').height;
 const HomeItem = ({ item, index }) => {
     const actionSheetEditReminder = createRef()
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
-    // const [textColor, setTextColor] = useState(moment().isAfter(reminderTime) ? 'red' : 'black');
     const dispatch = useDispatch();
    const [deletePending, setDeletePending] = useState(false);
 
@@ -49,8 +48,8 @@ const HomeItem = ({ item, index }) => {
     const formattedTimeRemaining = formatTime(selectedDropdownReminder);
     const reminderTime = moment(selectedDropdownReminder);
     const textColor = moment().isAfter(reminderTime) ? 'red' : 'black';
+    // const [textColor, setTextColor] = useState(moment().isAfter(reminderTime) ? 'red' : 'black');
     const modalOpen= moment().isSame(reminderTime) ? 'true' : 'false';
-console.log(reminderTime.toLocaleString(),'reminderTime')
     return (
         <>
         <View style={styles.container}>
@@ -64,6 +63,7 @@ console.log(reminderTime.toLocaleString(),'reminderTime')
             <View style={styles.buttnMain}>
                 <CheckBox
                     onFillColor={{ true: '#000', false: 'red' }}
+                    // style={{ transform: [{ scaleX: Platform ==='ios' ? 0 : 2.1 }, { scaleY: Platform ==='ios' ? 0 : 2.02 }] }}
                     boxType='square'
                     value={toggleCheckBox}
                     onValueChange={(newValue, index) =>  handleDelete() }

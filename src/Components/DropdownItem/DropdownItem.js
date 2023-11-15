@@ -26,7 +26,7 @@ const DropdownItem = ({ dropdownData, onValueChange,Editvalue,placeholder }) => 
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         // inputSearchStyle={styles.inputSearchStyle}
-        // iconStyle={styles.iconStyle}
+        itemTextStyle={{color:"#000"}}
         data={dropdownData}
         // search
         maxHeight={300}
@@ -57,9 +57,11 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    color:"#000"
   },
   selectedTextStyle: {
     fontSize: 16,
+    color:"#000"
   },
   iconStyle: {
     width: 20,

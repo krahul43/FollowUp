@@ -2,21 +2,44 @@ import React, { useState, useEffect } from 'react'
 import { Button, Text, View, StyleSheet, Dimensions,TouchableOpacity,Image } from "react-native";
 import Modal from "react-native-modal";
 import moment from 'moment';
+import PushNotification, {Importance} from 'react-native-push-notification';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
   const [isModalVisible, setModalVisible] = useState(false);
+  let messageTitle=mainData.selectedButton
+  let messageContact=mainData.selectedDropdownContact
+  let description = messageTitle === 'Call' ? "Don't forget to make a call to " + messageContact + " today!"
+                 : messageTitle === 'Text' ? "Send a quick text to " + messageContact + " and catch up on the latest news!"
+                 : messageTitle === 'Meet' ? "Your meeting with " + messageContact + " is scheduled. Be prepared!"
+                 : "Just a friendly reminder ";
 
   useEffect(() => {
     const checkReminderTime = () => {
       const currentTime = moment();
   
       // Check if the current time is within a small time range around the reminder time
-      const timeRangeStart = reminderTime.clone().subtract(10, 'seconds'); // Adjust the range as needed
-      const timeRangeEnd = reminderTime.clone().add(10, 'seconds'); // Adjust the range as needed
+      const timeRangeStart = reminderTime.clone().subtract(6, 'seconds'); // Adjust the range as needed
+      const timeRangeEnd = reminderTime.clone().add(5, 'seconds'); // Adjust the range as needed
   
       if (currentTime.isBetween(timeRangeStart, timeRangeEnd)) {
         setModalVisible(true);
   
+       
+        PushNotification.localNotification({
+          channelId: "channel-id", // (required)
+          channelName: "My channel", // (required)
+          title:`${messageTitle} Reminder`,
+          message: description
+      });
+
+      PushNotificationIOS.addNotificationRequest({
+        // channelId: "channel-id", // (required)
+        // channelName: "My channel", // (required)
+        alertTitle:`${messageTitle} Reminder`,
+        alertBody:description
+      })
+
         // Automatically close the modal after one minute (adjust as needed)
         setTimeout(() => {
           setModalVisible(false);
@@ -29,6 +52,7 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
     const intervalId = setInterval(checkReminderTime, 5000); // Check every 5 seconds (adjust as needed)
     return () => clearInterval(intervalId);
   }, [dataModal, reminderTime]);
+
   console.log(dataModal,'modaldata')
   console.log(isModalVisible,'isModalVisible')
 
@@ -45,9 +69,9 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View style={{ alignItems: 'center' }}>
-              <Image source={require('../../assets/modalcon.png')} style={{ height: 80, width: 80, }} />
+              <Image source={require('../../assets/modalcon.png')} style={{ height: 140, width: 140, }} />
             </View>
-            <Text style={styles.modalText}>Hey its Time to {mainData.selectedButton} to {mainData.selectedDropdownContact} !</Text>
+            <Text style={styles.modalText}>{description} </Text>
             <View style={{ flexDirection: 'row', justifyContent:'center'}}>
               <TouchableOpacity onPress={()=>setModalVisible(false)} style={[styles.btn]}>
                 <Text style={styles.text}>Close</Text>
@@ -88,6 +112,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 28,
     color: '#000',
+    fontSize: 18,
     textAlign: 'center',
     fontWeight: '500',
     marginVertical: 10

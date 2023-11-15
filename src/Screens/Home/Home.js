@@ -4,7 +4,7 @@ import HomeItem from '../../Components/HomeItem/HomeItem'
 import AddButton from '../../Components/AddButton/AddButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
-import HomePopUp from '../../Components/HomePopUp/HomePopUp';
+import PushNotification, {Importance} from 'react-native-push-notification';
 
 const circleDiameter = Dimensions.get('window').width
 const circleDiameterHeight = Dimensions.get('window').height
@@ -13,6 +13,17 @@ const Home = ({ navigation }) => {
   const dispatch = useDispatch();
   const reminders = useSelector(state => state.reminders);
   console.log(reminders, 'reminders')
+  useEffect(()=>{
+  },)
+
+  // const createChannel=()=>{
+  //   PushNotification.createChannel(
+  //     {
+  //       channelId: "channel-id", // (required)
+  //       channelName: "My channel", // (required)
+  //   }
+  //   );
+  // }
 
   return (
     <SafeAreaView style={styles.mainContainer}>

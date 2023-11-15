@@ -86,14 +86,20 @@ const Setting = ({navigation}) => {
   
     const getContacts = async () => {
       // Use the react-native-contacts library to fetch contacts
-      return new Promise((resolve, reject) => {
-        Contacts.getAll((err, contacts) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(contacts);
-          }
-        });
+      Contacts.checkPermission().then(permission => {
+        console.log('Permission status:', permission);
+        if (permission === 'authorized') {
+          Contacts.getAll()
+            .then(contacts => {
+              console.log('contacts -> ', contacts);
+              // setContacts(contacts);
+            })
+            .catch(err => {
+              console.warn('Error fetching contacts:', err);
+            });
+        } else {
+          console.warn('Permission to access contacts was not granted');
+        }
       });
     };
   
