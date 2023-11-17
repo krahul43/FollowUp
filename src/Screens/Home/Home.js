@@ -43,7 +43,6 @@ const Home = ({ navigation }) => {
           style={styles.homeDefault}
         />
       }
-         {/* <HomePopUp /> */}
 
       <View style={styles.btnMain}>
         <AddButton style={styles.Addbtn} />

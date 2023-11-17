@@ -157,7 +157,7 @@ const Setting = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.centerContainer}>
-                        <Text style={styles.txt}>Reminder</Text>
+                        <Text style={styles.txt}>Settings</Text>
                     </View>
                 </View>
                 <View style={[styles.dptxtView, { padding: 15, marginVertical: 15 }]}>

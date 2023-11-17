@@ -144,7 +144,7 @@ export const fetchAndAddContacts = () => {
             dispatch({
               type: 'ADD_REMINDER',
               payload: {
-                selectedButton: '../../assets/message.png',  // Set your default values or get them from somewhere
+                selectedButton:'Text',  // Set your default values or get them from somewhere
                 selectedDropdownContact: reminderText,
                 selectedDropdownReminder: reminderTime,  // Set your default reminder time or get it from somewhere
               },

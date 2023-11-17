@@ -89,8 +89,12 @@ const HomeItem = ({ item, index }) => {
             <View style={styles.buttnMain}>
                 <CheckBox
                     onFillColor={{ true: '#000', false: 'red' }}
-                    // style={{ transform: [{ scaleX: Platform ==='ios' ? 0 : 2.1 }, { scaleY: Platform ==='ios' ? 0 : 2.02 }] }}
-                    boxType='square'
+                    tintColors={{true: '#0a8960', false:  '#000'}}
+                    style={{
+                        transform: [{ scaleX: Platform.OS === 'ios' ? 0 : 2.1 }, { scaleY: Platform.OS === 'ios' ? 0 : 2.02 }],
+                        borderColor: 'red', // replace 'yourBorderColor' with the color you want
+                        borderWidth: 1, // replace 1 with the desired border width
+                    }}                    boxType='square'
                     value={toggleCheckBox}
                     onValueChange={(newValue, index) =>  handleDelete() }
                 />

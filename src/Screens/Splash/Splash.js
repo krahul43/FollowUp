@@ -15,6 +15,7 @@ export default Splash
 const styles = StyleSheet.create({
     viewtxt: {
         flex: 1,
+        backgroundColor:'#fff',
         alignItems: 'center',
         justifyContent: 'center'
     },

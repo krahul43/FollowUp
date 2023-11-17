@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Text, View, StyleSheet, Dimensions,TouchableOpacity,Image } from "react-native";
+import { Button, Text, View, StyleSheet, Dimensions,TouchableOpacity,Image, Platform } from "react-native";
 import Modal from "react-native-modal";
 import moment from 'moment';
 import PushNotification, {Importance} from 'react-native-push-notification';
@@ -19,28 +19,29 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
       const currentTime = moment();
   
       // Check if the current time is within a small time range around the reminder time
-      const timeRangeStart = reminderTime.clone().subtract(6, 'seconds'); // Adjust the range as needed
+      const timeRangeStart = reminderTime.clone().subtract(5, 'seconds'); // Adjust the range as needed
       const timeRangeEnd = reminderTime.clone().add(5, 'seconds'); // Adjust the range as needed
   
       if (currentTime.isBetween(timeRangeStart, timeRangeEnd)) {
         setModalVisible(true);
   
-       
+        // if(Platform.OS==='android'){
         PushNotification.localNotification({
           channelId: "channel-id", // (required)
           channelName: "My channel", // (required)
           title:`${messageTitle} Reminder`,
           message: description
       });
-
+    // }
+  if(Platform.OS==='ios'){
       PushNotificationIOS.addNotificationRequest({
         // channelId: "channel-id", // (required)
         // channelName: "My channel", // (required)
         alertTitle:`${messageTitle} Reminder`,
         alertBody:description,
-        date:currentTime.isBetween(timeRangeStart, timeRangeEnd) 
+       
       })
-
+    }
         // Automatically close the modal after one minute (adjust as needed)
         setTimeout(() => {
           setModalVisible(false);
@@ -53,9 +54,6 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
     const intervalId = setInterval(checkReminderTime, 5000); // Check every 5 seconds (adjust as needed)
     return () => clearInterval(intervalId);
   }, [dataModal, reminderTime]);
-
-  // console.log(dataModal,'modaldata')
-  // console.log(isModalVisible,'isModalVisible')
 
   return (
 
@@ -73,7 +71,7 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
               <Image source={require('../../assets/modalcon.png')} style={{ height: 140, width: 140, }} />
             </View>
             <Text style={styles.modalText}>{description} </Text>
-            <View style={{ flexDirection: 'row', justifyContent:'center'}}>
+            <View style={{  justifyContent:'center'}}>
               <TouchableOpacity onPress={()=>setModalVisible(false)} style={[styles.btn]}>
                 <Text style={styles.text}>Close</Text>
               </TouchableOpacity>
@@ -126,7 +124,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btn: {
-    padding: 10,
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',

@@ -382,6 +382,8 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
+  - RNDateTimePicker (7.6.1):
+    - React-Core
   - RNPermissions (3.10.1):
     - React-Core
   - RNScreens (3.27.0):
@@ -457,6 +459,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -559,6 +562,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/checkbox"
   RNCPushNotificationIOS:
     :path: "../node_modules/@react-native-community/push-notification-ios"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNScreens:
@@ -620,6 +625,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
   RNCCheckbox: 75255b03e604bbcc26411eb31c4cbe3e3865f538
   RNCPushNotificationIOS: 64218f3c776c03d7408284a819b2abfda1834bc8
+  RNDateTimePicker: 8fb39263b721223e095248acaf6f406d5b7f6713
   RNPermissions: d3514ae6414ea6a3a46c1097f2f21491a82f8934
   RNScreens: 2b19e2471db8a581c83f381f4ea5d43071c9a3bf
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17

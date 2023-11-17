@@ -7,6 +7,7 @@ import { ReminderTimeData } from '../StaticData/StaticData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import { addReminder } from '../../redux/reminderActions/reminderActions';
+import AddDatePicker from '../AddDatePicker/AddDatePicker';
 
 const AddReminder = ({ actionSheetBrand }) => {
     const [contacts, setContacts] = useState([]);
@@ -114,6 +115,7 @@ const AddReminder = ({ actionSheetBrand }) => {
                 <Text style={styles.dptxt}>Reminder:</Text>
                 <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
             </View>
+            <AddDatePicker />
             <View style={styles.imgView}>
                 <AddReminderImage
                     ReminderImage={require('../../assets/message.png')}
@@ -134,6 +136,7 @@ const AddReminder = ({ actionSheetBrand }) => {
                     isSelected={selectedButton === 'Meet'}
                 />
             </View>
+           
             {selectedButton !== null && selectedDropdownContact !== null && selectedDropdownReminder !== null && (
             <TouchableOpacity onPress={() => {handleSaveToStorage(),actionSheetBrand.current?.hide() }} style={styles.button}>
                 <Text style={styles.text}>Add</Text>

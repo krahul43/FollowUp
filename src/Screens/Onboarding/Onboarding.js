@@ -1,8 +1,9 @@
 
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native'
+import { View, Text, Image, StyleSheet, StatusBar,PermissionsAndroid,Alert,Platform } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AppIntroSlider from "react-native-app-intro-slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const slides = [
   {
@@ -23,6 +24,63 @@ const slides = [
 ]
 
 const Onboarding = ({ navigation }) => {
+  const [permissionGranted, setPermissionGranted] = useState(false);
+
+  useEffect(() => {
+    const checkContactPermission = async () => {
+      try {
+        const result = await checkPlatformPermission();
+        setPermissionGranted(result === RESULTS.GRANTED);
+      } catch (error) {
+        console.log("Permission check error:", error);
+      }
+    };
+
+    checkContactPermission();
+  }, []);
+
+  const checkPlatformPermission = async () => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CONTACTS
+        : PERMISSIONS.ANDROID.READ_CONTACTS;
+
+    const result = await check(permission);
+    return result;
+  };
+
+  const requestPlatformPermission = async () => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CONTACTS
+        : PERMISSIONS.ANDROID.READ_CONTACTS;
+
+    const result = await request(permission);
+    return result;
+  };
+  const nextbtn = async () => {
+    console.log("Next button pressed");
+    if (!permissionGranted) {
+      const result = await requestPlatformPermission();
+
+      if (result !== RESULTS.GRANTED) {
+        // Show alert only if the permission is denied
+        Alert.alert(
+          'Permission Required',
+          'This feature requires access to your contacts. Please enable the contact permission in your device settings.',
+          [
+            { text: 'OK', onPress: () => {} }
+          ]
+        );
+        return; // Do not proceed if permission is not granted
+      }
+    }
+
+    // Permission has been granted at this point
+    setPermissionGranted(true);
+    navigation.navigate("Home")
+    AsyncStorage.setItem('isAppFirstLaunched','true') 
+  };
 
 
   StatusBar.setBarStyle('light-content', true);
@@ -89,8 +147,8 @@ const Onboarding = ({ navigation }) => {
       renderNextButton={() => buttonLabel("Next")}
       renderSkipButton={() => buttonLabel("Skip")}
       renderDoneButton={() => buttonLabel("Next")}
-      onSkip={() => {navigation.navigate("Home"),AsyncStorage.setItem('isAppFirstLaunched','true') }}
-      onDone={() => { navigation.navigate("Home"),AsyncStorage.setItem('isAppFirstLaunched','true') }}
+      onSkip={nextbtn}
+      onDone={nextbtn}
 
     />
   )
