@@ -8,7 +8,6 @@ export const ReminderTimeData = [
     { label: '6 hours', value: '6 hours' },
     { label: 'At 8pm tonight', value: 'At 8pm tonight' },
     { label: 'At 9am tomorrow', value: 'At 9am tomorrow' },
-    // { label: '1 days', value: '1 days' },
     { label: '2 days', value: '2 days' },
     { label: '3 days', value: '3 days' },
     { label: '4 days', value: '4 days' },

@@ -55,10 +55,14 @@ const initialContactsState = {
 };
 const initialSettingState = {
   backgroundFetchingEnabled: false,
-  reminderTime: '15 minutes', 
+
 };
+
+const currentTime = new Date()
+const ModifiedTime = new Date(currentTime.getTime() + 10 * 60 * 1000)
+
 const initialTimeState = {
-  reminderTime: '15 minutes', 
+  reminderTime: ModifiedTime,
 };
 // Reducer for contacts
 const contactsReducer = (state = initialContactsState, action) => {
@@ -85,7 +89,7 @@ const settingReducer = (state = initialSettingState, action) => {
         ...state,
         backgroundFetchingEnabled: action.payload,
       };
-    
+
     default:
       return state;
   }
@@ -98,7 +102,7 @@ const timeReducer = (state = initialTimeState, action) => {
         ...state,
         reminderTime: action.payload,
       };
-    
+
     default:
       return state;
   }
@@ -109,13 +113,13 @@ const rootReducer = combineReducers({
   reminders: reminderReducer,
   contacts: contactsReducer,
   settings: settingReducer,
-  ToggleTime:timeReducer
+  ToggleTime: timeReducer
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['reminders','storedContacts','settings'],
+  whitelist: ['reminders', 'storedContacts', 'settings', 'ToggleTime'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

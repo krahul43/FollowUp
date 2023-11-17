@@ -36,44 +36,27 @@ export const addReminder = (selectedButton, selectedDropdownContact, selectedDro
     };
   };
 
-  const persistReminderTime = async (reminderTime) => {
-    try {
-      await AsyncStorage.setItem('reminderTime', JSON.stringify(reminderTime));
-    } catch (error) {
-      console.error('Error saving reminder time:', error);
-    }
-  };
   
-  export const toggleBackgroundFetching = (isEnabled) => {
+  export const toggleTimeFetching = (targetTime) => {
     return async (dispatch, getState) => {
       try {
-        await AsyncStorage.setItem('root', JSON.stringify({ settings: { backgroundFetchingEnabled: isEnabled } }));
-        dispatch({
-          type: 'TOGGLE_BACKGROUND_FETCHING',
-          payload: isEnabled,
-        });
-  
-        // If background fetching is enabled, fetch the reminder time and dispatch it
-        if (isEnabled) {
-          const reminderTime = getState().ToggleTime.reminderTime;
+     
+          // Log the correct variable, which is 'newTime'
+          console.log(targetTime, '33reminderTime');
           dispatch({
             type: 'UPDATE_REMINDER_TIME',
-            payload: reminderTime,
+            payload: targetTime, // Corrected payload to update the reminder time
           });
-  
-          // Persist the reminder time
-          persistReminderTime(reminderTime);
-        }
+          await AsyncStorage.setItem('root', JSON.stringify({ ToggleTime: { reminderTime: targetTime } }));
       } catch (error) {
         console.error('Error saving backgroundFetchingEnabled state:', error);
       }
     };
   };
-  
   export const loadReminderTime = () => {
     return async (dispatch) => {
       try {
-        const storedReminderTime = await AsyncStorage.getItem('reminderTime');
+        const storedReminderTime = await AsyncStorage.getItem('ToggleTime');
         if (storedReminderTime) {
           const reminderTime = JSON.parse(storedReminderTime);
           dispatch({
@@ -86,6 +69,22 @@ export const addReminder = (selectedButton, selectedDropdownContact, selectedDro
       }
     };
   };
+  
+  export const toggleBackgroundFetching = (isEnabled) => {
+    return async (dispatch, getState) => {
+      try {
+        await AsyncStorage.setItem('root', JSON.stringify({ settings: { backgroundFetchingEnabled: isEnabled } }));
+        dispatch({
+          type: 'TOGGLE_BACKGROUND_FETCHING',
+          payload: isEnabled,
+        });
+      } catch (error) {
+        console.error('Error saving backgroundFetchingEnabled state:', error);
+      }
+    };
+  };
+  
+
 const fetchDeviceContacts = () => {
   return new Promise((resolve, reject) => {
     Contacts.getAll()
@@ -126,7 +125,7 @@ export const fetchAndAddContacts = () => {
       console.log(newContactsToAdd,'newContactsToAdd')
       const backgroundFetchingEnabled = getState().settings.backgroundFetchingEnabled;
       const reminderTime = getState().ToggleTime.reminderTime;
-      console.log(reminderTime,'reminderTime')
+     
 
       console.log(backgroundFetchingEnabled,'backgroundFetchingEnabled')
       if (newContactsToAdd.length > 0) {
@@ -145,7 +144,7 @@ export const fetchAndAddContacts = () => {
             dispatch({
               type: 'ADD_REMINDER',
               payload: {
-                selectedButton: 'default',  // Set your default values or get them from somewhere
+                selectedButton: '../../assets/message.png',  // Set your default values or get them from somewhere
                 selectedDropdownContact: reminderText,
                 selectedDropdownReminder: reminderTime,  // Set your default reminder time or get it from somewhere
               },

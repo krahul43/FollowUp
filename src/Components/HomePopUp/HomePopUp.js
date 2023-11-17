@@ -37,7 +37,8 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
         // channelId: "channel-id", // (required)
         // channelName: "My channel", // (required)
         alertTitle:`${messageTitle} Reminder`,
-        alertBody:description
+        alertBody:description,
+        date:currentTime.isBetween(timeRangeStart, timeRangeEnd) 
       })
 
         // Automatically close the modal after one minute (adjust as needed)

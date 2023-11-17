@@ -9,102 +9,141 @@ import Contacts from 'react-native-contacts';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleBackgroundFetching } from '../../redux/reminderActions/reminderActions'
+import { toggleTimeFetching } from '../../redux/reminderActions/reminderActions'
+import moment from 'moment';
 
 const Setting = ({ navigation }) => {
     const backgroundFetchingEnabled = useSelector(state => state.settings.backgroundFetchingEnabled);
-  const [toggleCheckBox, setToggleCheckBox] = useState(backgroundFetchingEnabled);
-  const [permissionGranted, setPermissionGranted] = useState(false);
-  const [timeAdded, setTimeAdded] = useState();
-  const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts);
-  const timeSet = useSelector(state => state.ToggleTime.reminderTime);
+    const [toggleCheckBox, setToggleCheckBox] = useState(backgroundFetchingEnabled);
+    const [permissionGranted, setPermissionGranted] = useState(false);
+    const [staticData, setStaticData] = useState(ReminderTimeData);
+    const [selectedTime, setSelectedTime] = useState();
+    const dispatch = useDispatch();
+    const contacts = useSelector(state => state.contacts.contacts);
+    const timereminder = useSelector(state => state.ToggleTime.reminderTime);
+
+    console.log(timereminder, 'contact2222')
+    console.log(staticData, 'staticData')
   
-  console.log(timeSet,'contact2222')
-
-  useEffect(() => {
-    const checkContactPermission = async () => {
-      try {
-        const result = await checkPlatformPermission();
-        setPermissionGranted(result === RESULTS.GRANTED);
-      } catch (error) {
-        console.log("Permission check error:", error);
-      }
-    };
+    const convertTimereminder = (timereminder) => {
+        try {
+          if (!timereminder) {
+            throw new Error('Timereminder is undefined');
+          }
     
-    checkContactPermission();
-  }, []);
+          const targetTime = moment(timereminder);
+          const currentTime = moment();
+          const duration = moment.duration(targetTime.diff(currentTime));
+          const minutesRemaining = duration.asMinutes();
+    
+          if (minutesRemaining < 0) {
+            // If the target time is in the past, show the date and time
+            return targetTime.format('MMMM D [at] h:mm A');
+          } else if (minutesRemaining < 1440) {
+            // If the target time is today, show minutes and hours remaining
+            const hours = Math.floor(minutesRemaining / 60);
+            const remainingMinutes = Math.round(minutesRemaining % 60);
+            return `${hours} hours and ${remainingMinutes} minutes`;
+          } else {
+            // If the target time is in the future, show the date and time
+            return targetTime.format('MMMM D [at] h:mm A');
+          }
+        } catch (error) {
+          console.error('Error converting timereminder:', error.message);
+          return null;
+        }
+      };
+      useEffect(() => {
+        const convertedTimereminder = convertTimereminder(timereminder);
+        const newItem = { label: convertedTimereminder, value: convertedTimereminder };
+        setSelectedTime(convertedTimereminder)
+        setStaticData(prevStaticData => [...prevStaticData, newItem]);
+      }, [timereminder]);
+
+    useEffect(() => {
+        const checkContactPermission = async () => {
+            try {
+                const result = await checkPlatformPermission();
+                setPermissionGranted(result === RESULTS.GRANTED);
+            } catch (error) {
+                console.log("Permission check error:", error);
+            }
+        };
+
+        checkContactPermission();
+    }, []);
 
 
 
-  const checkPlatformPermission = async () => {
-    const permission =
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CONTACTS
-        : PERMISSIONS.ANDROID.READ_CONTACTS;
+    const checkPlatformPermission = async () => {
+        const permission =
+            Platform.OS === 'ios'
+                ? PERMISSIONS.IOS.CONTACTS
+                : PERMISSIONS.ANDROID.READ_CONTACTS;
 
-    return check(permission);
-  };
+        return check(permission);
+    };
 
-  const requestPlatformPermission = async () => {
-    const permission =
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.CONTACTS
-        : PERMISSIONS.ANDROID.READ_CONTACTS;
+    const requestPlatformPermission = async () => {
+        const permission =
+            Platform.OS === 'ios'
+                ? PERMISSIONS.IOS.CONTACTS
+                : PERMISSIONS.ANDROID.READ_CONTACTS;
 
-    return request(permission);
-  };
+        return request(permission);
+    };
 
-  const openBottomSheet = async (value) => {
-    if (!permissionGranted) {
-      const result = await requestPlatformPermission();
+    const toggleSwitch = async (value) => {
+        if (!permissionGranted) {
+            const result = await requestPlatformPermission();
 
-      if (result !== RESULTS.GRANTED) {
-        Alert.alert(
-          'Permission Required',
-          'This feature requires access to your contacts. Please enable the contact permission in your device settings.',
-          [
-            { text: 'OK', onPress: () => { } }
-          ]
-        );
-        return; // Do not proceed if permission is not granted
-      }
-    }
-    setToggleCheckBox(value);
-    dispatch(toggleBackgroundFetching(value));
-  };
+            if (result !== RESULTS.GRANTED) {
+                Alert.alert(
+                    'Permission Required',
+                    'This feature requires access to your contacts. Please enable the contact permission in your device settings.',
+                    [
+                        { text: 'OK', onPress: () => { } }
+                    ]
+                );
+                return; // Do not proceed if permission is not granted
+            }
+        }
+        setToggleCheckBox(value);
+        dispatch(toggleBackgroundFetching(value));
+    };
 
 
-      const handleDropdownReminder = (value) => {
-        const currentTime = new Date();    
+    const handleDropdownReminder = (value) => {
+    
+ 
+        const currentTime = new Date();
         if (value === 'At 8pm tonight') {
             const targetTime = new Date();
-            targetTime.setHours(20, 0, 0, 0); // Set the target time to 8 PM
-            // If the current time is later than 8 PM, add a day
+            targetTime.setHours(20, 0, 0, 0);
             if (currentTime >= targetTime) {
                 targetTime.setDate(targetTime.getDate() + 1);
             }
-            setTimeAdded(targetTime);
-        }else if (value === 'At 9am tomorrow') {
+            dispatch(toggleTimeFetching(targetTime));
+        } else if (value === 'At 9am tomorrow') {
             const targetTime = new Date();
-            targetTime.setHours(9, 0, 0, 0); // Set the target time to 9 AM
-    
-            // If the current time is later than 9 AM, add a day
+            targetTime.setHours(9, 0, 0, 0);
             if (currentTime >= targetTime) {
                 targetTime.setDate(targetTime.getDate() + 1);
             }
-            setTimeAdded(targetTime);
-        }else if (value === '1 day' || value === '2 days' || value === '3 days' || value === '4 days') {
-            const daysToAdd = parseInt(value); // Extract the number of days to add
-            const targetTime = new Date(currentTime.getTime() + daysToAdd * 24 * 60 * 60 * 1000); // Add days in milliseconds
-            setTimeAdded(targetTime);
+            dispatch(toggleTimeFetching(targetTime));
+        } else if (value === '1 day' || value === '2 days' || value === '3 days' || value === '4 days') {
+            const daysToAdd = parseInt(value);
+            const targetTime = new Date(currentTime.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+            dispatch(toggleTimeFetching(targetTime)); // Change 'newTime' to 'targetTime'
         } else {
-            // Handle other time intervals (e.g., minutes, hours)
             const timeValue = parseInt(value);
             const timeUnit = value.includes('hour') ? 'hours' : 'minutes';
-            const newTime = new Date(currentTime.getTime() + timeValue * (timeUnit === 'hours' ? 60 * 60 * 1000 : 60 * 1000));
-            setTimeAdded(newTime);
+            const targetTime = new Date(currentTime.getTime() + timeValue * (timeUnit === 'hours' ? 60 * 60 * 1000 : 60 * 1000));
+            dispatch(toggleTimeFetching(targetTime));
         }
     };
+
+
     return (
         <SafeAreaView style={styles.mainContainer}>
             <ScrollView>
@@ -129,12 +168,12 @@ const Setting = ({ navigation }) => {
                         offColor="#A9A9A9"
                         labelStyle={{ color: "black", fontWeight: "900" }}
                         size="large"
-                        onToggle={value => openBottomSheet(value)}
+                        onToggle={value => toggleSwitch(value)}
                     />
                 </View>
                 <View style={styles.dptxtView}>
                     <Text style={styles.dptxt}>Reminder 1:</Text>
-                    <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
+                    <DropdownItem dropdownData={staticData} placeholder={selectedTime} onValueChange={handleDropdownReminder} />
                 </View>
                 <View style={styles.dptxtView}>
                     <Text style={styles.dptxt}>Reminder 2:</Text>
@@ -192,7 +231,7 @@ const styles = StyleSheet.create({
         fontSize: 34,
         color: '#000',
         fontWeight: '700',
-        marginLeft:-27
+        marginLeft: -27
     },
     image: {
         width: 35,
