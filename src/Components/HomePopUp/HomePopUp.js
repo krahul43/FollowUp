@@ -53,8 +53,8 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
     return () => clearInterval(intervalId);
   }, [dataModal, reminderTime]);
 
-  console.log(dataModal,'modaldata')
-  console.log(isModalVisible,'isModalVisible')
+  // console.log(dataModal,'modaldata')
+  // console.log(isModalVisible,'isModalVisible')
 
   return (
 

@@ -1,3 +1,10 @@
+import Contacts from 'react-native-contacts';
+export const ADD_CONTACT = 'ADD_CONTACT';
+export const setReminder = 'setReminder'; 
+export const TOGGLE_BACKGROUND_FETCHING = 'TOGGLE_BACKGROUND_FETCHING';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 let nextId = 0; 
 export const addReminder = (selectedButton, selectedDropdownContact, selectedDropdownReminder) => {
   return (dispatch) => {
@@ -29,54 +36,137 @@ export const addReminder = (selectedButton, selectedDropdownContact, selectedDro
     };
   };
 
-  // export const addContact = (givenName, familyName) => {
-  //   return {
-  //     type: 'ADD_CONTACT',
-  //     payload: {
-  //       givenName,
-  //       familyName,
-  //       // Add other payload properties for the new contact based on your requirements
-  //     },
-  //   };
-  // };
-
-  export const addContact = (givenName, familyName) => {
-  return async (dispatch, getState) => {
-    // Simulate an asynchronous operation (e.g., fetching data from a server)
-    const newContactData = await simulateAsyncContactAddition(givenName, familyName);
-
-    // Dispatch the action to add the contact to the state
-    dispatch({
-      type: 'ADD_CONTACT',
-      payload: {
-        givenName: newContactData.givenName,
-        familyName: newContactData.familyName,
-        // Add other payload properties for the new contact based on your requirements
-      },
+  const persistReminderTime = async (reminderTime) => {
+    try {
+      await AsyncStorage.setItem('reminderTime', JSON.stringify(reminderTime));
+    } catch (error) {
+      console.error('Error saving reminder time:', error);
+    }
+  };
+  
+  export const toggleBackgroundFetching = (isEnabled) => {
+    return async (dispatch, getState) => {
+      try {
+        await AsyncStorage.setItem('root', JSON.stringify({ settings: { backgroundFetchingEnabled: isEnabled } }));
+        dispatch({
+          type: 'TOGGLE_BACKGROUND_FETCHING',
+          payload: isEnabled,
+        });
+  
+        // If background fetching is enabled, fetch the reminder time and dispatch it
+        if (isEnabled) {
+          const reminderTime = getState().ToggleTime.reminderTime;
+          dispatch({
+            type: 'UPDATE_REMINDER_TIME',
+            payload: reminderTime,
+          });
+  
+          // Persist the reminder time
+          persistReminderTime(reminderTime);
+        }
+      } catch (error) {
+        console.error('Error saving backgroundFetchingEnabled state:', error);
+      }
+    };
+  };
+  
+  export const loadReminderTime = () => {
+    return async (dispatch) => {
+      try {
+        const storedReminderTime = await AsyncStorage.getItem('reminderTime');
+        if (storedReminderTime) {
+          const reminderTime = JSON.parse(storedReminderTime);
+          dispatch({
+            type: 'UPDATE_REMINDER_TIME',
+            payload: reminderTime,
+          });
+        }
+      } catch (error) {
+        console.error('Error loading reminder time:', error);
+      }
+    };
+  };
+const fetchDeviceContacts = () => {
+  return new Promise((resolve, reject) => {
+    Contacts.getAll()
+    .then(contacts => {
+      resolve(contacts);
+    })
+    .catch(err => {
+      console.warn('Error fetching contacts:', err);
     });
+  });
+};
 
-    // Compare the new data with existing data and set reminder if newly found
-    const existingContacts = getState().contacts.contacts;
-    const isNewContact = compareContacts(existingContacts, newContactData);
+const getNewContacts = (existingContacts, newContacts) => {
+  return newContacts.filter(
+    (newContact) =>
+      !existingContacts.some(
+        (existingContact) =>
+          existingContact.givenName === newContact.givenName &&
+          existingContact.familyName === newContact.familyName
+      )
+  );
+};
 
-    if (isNewContact) {
-      // Dispatch the action to set a reminder
-      dispatch(setReminder(newContactData));
+
+export const fetchAndAddContacts = () => {
+  return async (dispatch, getState) => {
+    try {
+      // Fetch device contacts
+      const newContacts = await fetchDeviceContacts();
+
+      // Retrieve existing contacts from AsyncStorage
+      const existingContactsString = await AsyncStorage.getItem('storedContacts');
+      const existingContacts = JSON.parse(existingContactsString) || []; 
+      console.log(existingContacts,'existingContacts')
+
+      // Compare new contacts with existing contacts
+      const newContactsToAdd = getNewContacts(existingContacts, newContacts);
+      console.log(newContactsToAdd,'newContactsToAdd')
+      const backgroundFetchingEnabled = getState().settings.backgroundFetchingEnabled;
+      const reminderTime = getState().ToggleTime.reminderTime;
+      console.log(reminderTime,'reminderTime')
+
+      console.log(backgroundFetchingEnabled,'backgroundFetchingEnabled')
+      if (newContactsToAdd.length > 0) {
+        // Dispatch action to add new contacts
+        newContactsToAdd.forEach((newContact) => {
+          dispatch({
+            type: ADD_CONTACT,
+            payload: newContact,
+          });
+        });
+
+        if (backgroundFetchingEnabled) {
+          // Dispatch action to add reminders for new contacts
+          newContactsToAdd.forEach((newContact) => {
+            const reminderText = `${newContact.familyName} ${newContact.givenName}`;
+            dispatch({
+              type: 'ADD_REMINDER',
+              payload: {
+                selectedButton: 'default',  // Set your default values or get them from somewhere
+                selectedDropdownContact: reminderText,
+                selectedDropdownReminder: reminderTime,  // Set your default reminder time or get it from somewhere
+              },
+            });
+          });
+        }
+
+        // Save updated contacts to AsyncStorage
+        const updatedContacts = [...existingContacts, ...newContactsToAdd];
+        await AsyncStorage.setItem('storedContacts', JSON.stringify(updatedContacts));
+      }
+    } catch (error) {
+      console.error('Error fetching and adding contacts:', error);
     }
   };
 };
-// Helper function to simulate asynchronous contact addition
-const simulateAsyncContactAddition = async (givenName, familyName) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ givenName, familyName, /* other properties */ });
-    }, 1000); // Simulating a 1-second async operation
-  });
-};
-export const compareContacts = (existingContacts, newContact) => {
-  // Implement your logic to compare contacts and determine if it's newly found
-  // For simplicity, let's assume that the contact is new if not found in the existing contacts
-  return !existingContacts.some((contact) => contact.id === newContact.id);
-};
+
+
+
+
+
+
 
   

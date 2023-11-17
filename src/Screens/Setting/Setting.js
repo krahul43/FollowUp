@@ -1,124 +1,80 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Alert,Image, Dimensions, ScrollView } from 'react-native'
-import React, { useState,useEffect } from 'react'
+
+import { Platform, StyleSheet, Text, SafeAreaView, View, TouchableOpacity, Alert, Image, ScrollView } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import ToggleSwitch from 'toggle-switch-react-native'
 import DropdownItem from '../../Components/DropdownItem/DropdownItem'
 import ReminderTime from '../../Components/ReminderTime/ReminderTime'
 import { ReminderTimeData } from '../../Components/StaticData/StaticData'
 import Contacts from 'react-native-contacts';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleBackgroundFetching } from '../../redux/reminderActions/reminderActions'
 
-const Setting = ({navigation}) => {
-    const [toggleCheckBox, setToggleCheckBox] = useState(false);
-    const [permissionGranted, setPermissionGranted] = useState(false);
+const Setting = ({ navigation }) => {
+    const backgroundFetchingEnabled = useSelector(state => state.settings.backgroundFetchingEnabled);
+  const [toggleCheckBox, setToggleCheckBox] = useState(backgroundFetchingEnabled);
+  const [permissionGranted, setPermissionGranted] = useState(false);
+  const [timeAdded, setTimeAdded] = useState();
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+  const timeSet = useSelector(state => state.ToggleTime.reminderTime);
   
-    useEffect(() => {
-      const checkContactPermission = async () => {
-        try {
-          const result = await checkPlatformPermission();
-          setPermissionGranted(result === RESULTS.GRANTED);
-        } catch (error) {
-          console.log("Permission check error:", error);
-        }
-      };
-      checkContactPermission();
-    }, []);
-  
-    const checkPlatformPermission = async () => {
-      const permission =
-        Platform.OS === 'ios'
-          ? PERMISSIONS.IOS.CONTACTS
-          : PERMISSIONS.ANDROID.READ_CONTACTS;
-  
-      return check(permission);
-    };
-  
-    const requestPlatformPermission = async () => {
-      const permission =
-        Platform.OS === 'ios'
-          ? PERMISSIONS.IOS.CONTACTS
-          : PERMISSIONS.ANDROID.READ_CONTACTS;
-  
-      return request(permission);
-    };
-  
-    const openBottomSheet = async () => {
-      if (!permissionGranted) {
-        const result = await requestPlatformPermission();
-  
-        if (result !== RESULTS.GRANTED) {
-          // Show alert only if the permission is denied
-          Alert.alert(
-            'Permission Required',
-            'This feature requires access to your contacts. Please enable the contact permission in your device settings.',
-            [
-              { text: 'OK', onPress: () => {} }
-            ]
-          );
-          return; // Do not proceed if permission is not granted
-        }
-      }
-  
-      // Permission has been granted at this point
-      setToggleCheckBox(!toggleCheckBox);
-  
-      // Additional logic to handle setting default reminder for existing contacts
-      if (toggleCheckBox) {
-        setDefaultReminderForExistingContacts();
-      }
-    };
-  
-    const setDefaultReminderForExistingContacts = async () => {
+  console.log(timeSet,'contact2222')
+
+  useEffect(() => {
+    const checkContactPermission = async () => {
       try {
-        const contacts = await getContacts();
-        // Iterate through contacts and set default reminders
-        contacts.forEach(async (contact) => {
-          // Check if the contact already has a reminder set
-          const hasReminder = await checkIfContactHasReminder(contact);
-          if (!hasReminder) {
-            // Set default reminder for the contact
-            await setDefaultReminder(contact);
-          }
-        });
+        const result = await checkPlatformPermission();
+        setPermissionGranted(result === RESULTS.GRANTED);
       } catch (error) {
-        console.error('Error setting default reminders:', error);
+        console.log("Permission check error:", error);
       }
     };
-  
-    const getContacts = async () => {
-      // Use the react-native-contacts library to fetch contacts
-      Contacts.checkPermission().then(permission => {
-        console.log('Permission status:', permission);
-        if (permission === 'authorized') {
-          Contacts.getAll()
-            .then(contacts => {
-              console.log('contacts -> ', contacts);
-              // setContacts(contacts);
-            })
-            .catch(err => {
-              console.warn('Error fetching contacts:', err);
-            });
-        } else {
-          console.warn('Permission to access contacts was not granted');
-        }
-      });
-    };
-  
-    const checkIfContactHasReminder = async (contact) => {
-      // Your logic to check if the contact already has a reminder set
-      // This can involve checking a database or any other storage
-      // Return true if the contact has a reminder, false otherwise
-      return false;
-    };
-  
-    const setDefaultReminder = async (contact) => {
-      // Your logic to set a default reminder for the contact
-      // This can involve creating a new reminder in your app
-      // using the appropriate functions/methods
-      console.log('Setting default reminder for contact:', contact);
+    
+    checkContactPermission();
+  }, []);
+
+
+
+  const checkPlatformPermission = async () => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CONTACTS
+        : PERMISSIONS.ANDROID.READ_CONTACTS;
+
+    return check(permission);
+  };
+
+  const requestPlatformPermission = async () => {
+    const permission =
+      Platform.OS === 'ios'
+        ? PERMISSIONS.IOS.CONTACTS
+        : PERMISSIONS.ANDROID.READ_CONTACTS;
+
+    return request(permission);
+  };
+
+  const openBottomSheet = async (value) => {
+    if (!permissionGranted) {
+      const result = await requestPlatformPermission();
+
+      if (result !== RESULTS.GRANTED) {
+        Alert.alert(
+          'Permission Required',
+          'This feature requires access to your contacts. Please enable the contact permission in your device settings.',
+          [
+            { text: 'OK', onPress: () => { } }
+          ]
+        );
+        return; // Do not proceed if permission is not granted
+      }
     }
+    setToggleCheckBox(value);
+    dispatch(toggleBackgroundFetching(value));
+  };
+
 
       const handleDropdownReminder = (value) => {
-        // setSelectedDropdownReminder(value);
         const currentTime = new Date();    
         if (value === 'At 8pm tonight') {
             const targetTime = new Date();
@@ -173,7 +129,7 @@ const Setting = ({navigation}) => {
                         offColor="#A9A9A9"
                         labelStyle={{ color: "black", fontWeight: "900" }}
                         size="large"
-                        onToggle={isOn => openBottomSheet(isOn)}
+                        onToggle={value => openBottomSheet(value)}
                     />
                 </View>
                 <View style={styles.dptxtView}>

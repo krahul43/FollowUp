@@ -14,15 +14,14 @@ const AddReminder = ({ actionSheetBrand }) => {
     const [selectedDropdownContact, setSelectedDropdownContact] = useState(null);
     const [selectedDropdownReminder, setSelectedDropdownReminder] = useState(null);
     const [timeAdded, setTimeAdded] = useState(null);
-    console.log(contacts,'comtacts')
     const dispatch = useDispatch();
     useEffect(() => {
         Contacts.checkPermission().then(permission => {
-          console.log('Permission status:', permission);
+        //   console.log('Permission status:', permission);
           if (permission === 'authorized') {
             Contacts.getAll()
               .then(contacts => {
-                console.log('contacts -> ', contacts);
+                // console.log('contacts -> ', contacts);
                 setContacts(contacts);
               })
               .catch(err => {

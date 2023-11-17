@@ -53,7 +53,13 @@ const reminderReducer = (state = initialState, action) => {
 const initialContactsState = {
   contacts: [],
 };
-
+const initialSettingState = {
+  backgroundFetchingEnabled: false,
+  reminderTime: '15 minutes', 
+};
+const initialTimeState = {
+  reminderTime: '15 minutes', 
+};
 // Reducer for contacts
 const contactsReducer = (state = initialContactsState, action) => {
   switch (action.type) {
@@ -62,27 +68,54 @@ const contactsReducer = (state = initialContactsState, action) => {
         id: state.contacts.length + 1,
         givenName: action.payload.givenName,
         familyName: action.payload.familyName,
-        // Add other properties for the new contact based on your requirements
       };
       return {
         ...state,
         contacts: [...state.contacts, newContact],
       };
-    // Add other actions for contacts if needed
     default:
       return state;
   }
 };
 
+const settingReducer = (state = initialSettingState, action) => {
+  switch (action.type) {
+    case 'TOGGLE_BACKGROUND_FETCHING':
+      return {
+        ...state,
+        backgroundFetchingEnabled: action.payload,
+      };
+    
+    default:
+      return state;
+  }
+};
+
+const timeReducer = (state = initialTimeState, action) => {
+  switch (action.type) {
+    case 'UPDATE_REMINDER_TIME':
+      return {
+        ...state,
+        reminderTime: action.payload,
+      };
+    
+    default:
+      return state;
+  }
+};
+
+
 const rootReducer = combineReducers({
   reminders: reminderReducer,
   contacts: contactsReducer,
+  settings: settingReducer,
+  ToggleTime:timeReducer
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['reminders','contacts'],
+  whitelist: ['reminders','storedContacts','settings'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

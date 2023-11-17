@@ -1,6 +1,6 @@
 
-import React, { useState, createRef } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet,Platform } from 'react-native';
+import React, { useState, createRef,useCallback } from 'react';
+import { View, Image, Text, TouchableOpacity, StyleSheet,Platform,Linking } from 'react-native';
 import { Dimensions } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Snooze from '../Snooze/Snooze';
@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteReminder } from '../../redux/reminderActions/reminderActions';
 import moment from 'moment';
 import HomePopUp from '../HomePopUp/HomePopUp';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -50,16 +51,41 @@ const HomeItem = ({ item, index }) => {
     const textColor = moment().isAfter(reminderTime) ? 'red' : 'black';
     // const [textColor, setTextColor] = useState(moment().isAfter(reminderTime) ? 'red' : 'black');
     const modalOpen= moment().isSame(reminderTime) ? 'true' : 'false';
+    
+    const openContactsApp = async () => {
+        // For Android
+        if (Platform.OS === 'android') {
+          try {
+            await Linking.openURL('content://contacts/people');
+      
+              } catch (error) {
+            console.error('Error opening contacts app:', error);
+          }
+        }
+        // For iOS
+        else if (Platform.OS === 'ios') {
+          try {
+            await Linking.openSettings();
+             } catch (error) {
+            console.error('Error opening contacts app:', error);
+          }
+        }
+      };
+      
+      // Example usage
+      const handlePress = useCallback(async () => {
+        await openContactsApp();
+      }, []);
     return (
         <>
         <View style={styles.container}>
-            <View style={styles.txtContainer}>
+            <TouchableOpacity style={styles.txtContainer} onPress={()=> handlePress()}>
                 <ImageBox item={item} />
                 <View>
                     <Text style={styles.name}>{item.selectedDropdownContact}</Text>
                     <Text style={[styles.time,{color:textColor}]}>{formattedTimeRemaining}</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
             <View style={styles.buttnMain}>
                 <CheckBox
                     onFillColor={{ true: '#000', false: 'red' }}
