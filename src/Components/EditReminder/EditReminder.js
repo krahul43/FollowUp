@@ -16,37 +16,35 @@ const EditReminder = ({ actionSheetEditReminder, reminderData }) => {
     const [selectedDropdownReminder, setSelectedDropdownReminder] = useState(reminderData.selectedDropdownReminder);
     const [timeAdded, setTimeAdded] = useState(null);
     const dispatch = useDispatch();
-    
-console.log(selectedDropdownReminder,'3434343selectedDropdownReminder')
 
-const convertTimereminder = (selectedDropdownReminder) => {
-    try {
-      if (!selectedDropdownReminder) {
-        throw new Error('Timereminder is undefined');
-      }
+    const convertTimereminder = (selectedDropdownReminder) => {
+        try {
+            if (!selectedDropdownReminder) {
+                throw new Error('Timereminder is undefined');
+            }
 
-      const targetTime = moment(selectedDropdownReminder);
-      const currentTime = moment();
-      const duration = moment.duration(targetTime.diff(currentTime));
-      const minutesRemaining = duration.asMinutes();
+            const targetTime = moment(selectedDropdownReminder);
+            const currentTime = moment();
+            const duration = moment.duration(targetTime.diff(currentTime));
+            const minutesRemaining = duration.asMinutes();
 
-      if (minutesRemaining < 0) {
-        // If the target time is in the past, show the date and time
-        return targetTime.format('MMMM D [at] h:mm A');
-      } else if (minutesRemaining < 1440) {
-        // If the target time is today, show minutes and hours remaining
-        const hours = Math.floor(minutesRemaining / 60);
-        const remainingMinutes = Math.round(minutesRemaining % 60);
-        return `${hours} hours and ${remainingMinutes} minutes`;
-      } else {
-        // If the target time is in the future, show the date and time
-        return targetTime.format('MMMM D [at] h:mm A');
-      }
-    } catch (error) {
-      console.error('Error converting timereminder:', error.message);
-      return null;
-    }
-  };
+            if (minutesRemaining < 0) {
+                // If the target time is in the past, show the date and time
+                return targetTime.format('MMMM D [at] h:mm A');
+            } else if (minutesRemaining < 1440) {
+                // If the target time is today, show minutes and hours remaining
+                const hours = Math.floor(minutesRemaining / 60);
+                const remainingMinutes = Math.round(minutesRemaining % 60);
+                return `${hours} hours and ${remainingMinutes} minutes`;
+            } else {
+                // If the target time is in the future, show the date and time
+                return targetTime.format('MMMM D [at] h:mm A');
+            }
+        } catch (error) {
+            console.error('Error converting timereminder:', error.message);
+            return null;
+        }
+    };
     // useEffect(() => {
     //     if (reminderData) {
     //         setSelectedButton(reminderData.selectedButton);

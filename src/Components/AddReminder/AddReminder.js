@@ -11,14 +11,14 @@ import AddDatePicker from '../AddDatePicker/AddDatePicker';
 
 const AddReminder = ({ actionSheetBrand }) => {
     const [contacts, setContacts] = useState([]);
+    const dispatch = useDispatch();
     const [selectedButton, setSelectedButton] = useState(null);
     const [selectedDropdownContact, setSelectedDropdownContact] = useState(null);
     const [selectedDropdownReminder, setSelectedDropdownReminder] = useState(null);
     const [timeAdded, setTimeAdded] = useState(null);
-    const dispatch = useDispatch();
+    
     useEffect(() => {
         Contacts.checkPermission().then(permission => {
-        //   console.log('Permission status:', permission);
           if (permission === 'authorized') {
             Contacts.getAll()
               .then(contacts => {
@@ -26,10 +26,10 @@ const AddReminder = ({ actionSheetBrand }) => {
                 setContacts(contacts);
               })
               .catch(err => {
-                console.warn('Error fetching contacts:', err);
+                // console.warn('Error fetching contacts:', err);
               });
           } else {
-            console.warn('Permission to access contacts was not granted');
+            // console.warn('Permission to access contacts was not granted');
           }
         });
       }, []);
@@ -82,6 +82,10 @@ const AddReminder = ({ actionSheetBrand }) => {
             setTimeAdded(newTime);
         }
     };
+    const handleAnotherTime=(onseslected)=>{
+        setTimeAdded(onseslected)
+
+    }
 
   
     const handleButtonSelect = (button) => {
@@ -115,7 +119,8 @@ const AddReminder = ({ actionSheetBrand }) => {
                 <Text style={styles.dptxt}>Reminder:</Text>
                 <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
             </View>
-            <AddDatePicker />
+            {selectedDropdownReminder ==='Add Other' && <AddDatePicker onseslected={handleAnotherTime}/>}
+            
             <View style={styles.imgView}>
                 <AddReminderImage
                     ReminderImage={require('../../assets/message.png')}

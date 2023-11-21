@@ -5,7 +5,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 const DropdownItem = ({ dropdownData, onValueChange,Editvalue,placeholder }) => {
   const [value, setValue] = useState(Editvalue);
   const [isFocus, setIsFocus] = useState(false);
-  console.log(value, 'selectedDropdownReminder')
+
   const handleValueChange = (item) => {
     setValue(item.value);
     onValueChange(item.value); // Callback to parent component

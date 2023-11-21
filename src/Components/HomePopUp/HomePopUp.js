@@ -1,47 +1,86 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Text, View, StyleSheet, Dimensions,TouchableOpacity,Image, Platform } from "react-native";
+import { Button, Text, View, StyleSheet, Dimensions, TouchableOpacity, Image, Platform } from "react-native";
 import Modal from "react-native-modal";
 import moment from 'moment';
-import PushNotification, {Importance} from 'react-native-push-notification';
+import PushNotification, { Importance } from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  let messageTitle=mainData.selectedButton
-  let messageContact=mainData.selectedDropdownContact
+  let messageTitle = mainData.selectedButton
+  let messageContact = mainData.selectedDropdownContact
   let description = messageTitle === 'Call' ? "Don't forget to make a call to " + messageContact + " today!"
-                 : messageTitle === 'Text' ? "Send a quick text to " + messageContact + " and catch up on the latest news!"
-                 : messageTitle === 'Meet' ? "Your meeting with " + messageContact + " is scheduled. Be prepared!"
-                 : "Just a friendly reminder ";
+    : messageTitle === 'Text' ? "Send a quick text to " + messageContact + " and catch up on the latest news!"
+      : messageTitle === 'Meet' ? "Your meeting with " + messageContact + " is scheduled. Be prepared!"
+        : "Just a friendly reminder ";
+      
+
+  useEffect(() => {
+    const onNotificationReceivedForeground = (notification) => {
+      // Handle foreground notifications here
+      // You can customize this based on your requirements
+      console.log('Foreground notification:', notification);
+    };
+
+    // Add the event listener and provide the callback function
+    PushNotificationIOS.addEventListener('notification', onNotificationReceivedForeground);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      PushNotificationIOS.removeEventListener('notification', onNotificationReceivedForeground);
+    };
+  }, []);
+
+  
+  
 
   useEffect(() => {
     const checkReminderTime = () => {
       const currentTime = moment();
-  
+
       // Check if the current time is within a small time range around the reminder time
       const timeRangeStart = reminderTime.clone().subtract(5, 'seconds'); // Adjust the range as needed
       const timeRangeEnd = reminderTime.clone().add(5, 'seconds'); // Adjust the range as needed
-  
+
       if (currentTime.isBetween(timeRangeStart, timeRangeEnd)) {
         setModalVisible(true);
-  
-        // if(Platform.OS==='android'){
-        PushNotification.localNotification({
-          channelId: "channel-id", // (required)
-          channelName: "My channel", // (required)
-          title:`${messageTitle} Reminder`,
-          message: description
-      });
-    // }
-  if(Platform.OS==='ios'){
-      PushNotificationIOS.addNotificationRequest({
-        // channelId: "channel-id", // (required)
-        // channelName: "My channel", // (required)
-        alertTitle:`${messageTitle} Reminder`,
-        alertBody:description,
-       
-      })
-    }
+
+
+
+        if (Platform.OS === 'android') {
+          PushNotification.createChannel(
+            {
+              channelId: "com.followup", // (required)
+              channelName: "My channel", // (required)
+              channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+              playSound: false, // (optional) default: true
+              soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+              importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+              vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+            },
+            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+          );
+
+          PushNotification.localNotification({
+            channelId: "com.followup", // (required)
+            channelName: "My channel", // (required)
+            title: `${messageTitle} Reminder`,
+            message: description
+          });
+        }
+        if (Platform.OS === 'ios') {
+
+          if (Platform.OS === 'ios') {
+            // Remove the channel creation block for iOS
+            PushNotificationIOS.addNotificationRequest({
+              alertTitle: `${messageTitle} Reminder`,
+              alertBody: description,
+            });
+          }
+
+
+
+        }
         // Automatically close the modal after one minute (adjust as needed)
         setTimeout(() => {
           setModalVisible(false);
@@ -50,7 +89,7 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
         setModalVisible(false);
       }
     };
-  
+
     const intervalId = setInterval(checkReminderTime, 5000); // Check every 5 seconds (adjust as needed)
     return () => clearInterval(intervalId);
   }, [dataModal, reminderTime]);
@@ -71,8 +110,8 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
               <Image source={require('../../assets/modalcon.png')} style={{ height: 140, width: 140, }} />
             </View>
             <Text style={styles.modalText}>{description} </Text>
-            <View style={{  justifyContent:'center'}}>
-              <TouchableOpacity onPress={()=>setModalVisible(false)} style={[styles.btn]}>
+            <View style={{ justifyContent: 'center' }}>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={[styles.btn]}>
                 <Text style={styles.text}>Close</Text>
               </TouchableOpacity>
             </View>

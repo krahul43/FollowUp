@@ -4,7 +4,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const  Width  = Dimensions.get('window').width;
 
-const AddDatePicker = () => {
+const AddDatePicker = ({onseslected}) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [timePick, setTimePick] = useState(false);
     const showDatePicker = () => {
@@ -16,7 +16,7 @@ const AddDatePicker = () => {
       };
     
       const handleConfirm = (date) => {
-        console.log("A date has been picked: ", date);
+        onseslected(date)
         const dateString = new Date(date).toLocaleString('en-US', {
           year: 'numeric',
           month: 'long',

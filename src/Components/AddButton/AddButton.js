@@ -15,7 +15,6 @@ const AddButton = ({ style, onPress }) => {
         const result = await checkPlatformPermission();
         setPermissionGranted(result === RESULTS.GRANTED);
       } catch (error) {
-        console.log("Permission check error:", error);
       }
     };
 

@@ -88,12 +88,12 @@ const HomeItem = ({ item, index }) => {
             </TouchableOpacity>
             <View style={styles.buttnMain}>
                 <CheckBox
-                    onFillColor={{ true: '#000', false: 'red' }}
+                    // onFillColor={{ true: '#000', false: '#0a8960' }}
                     tintColors={{true: '#0a8960', false:  '#000'}}
                     style={{
-                        transform: [{ scaleX: Platform.OS === 'ios' ? 0 : 2.1 }, { scaleY: Platform.OS === 'ios' ? 0 : 2.02 }],
+                        transform: [{ scaleX: Platform.OS === 'ios' ? 1.0 : 2.1 }, { scaleY: Platform.OS === 'ios' ? 1.0 : 2.02 }],
                         borderColor: 'red', // replace 'yourBorderColor' with the color you want
-                        borderWidth: 1, // replace 1 with the desired border width
+                        borderWidth: 0.5, // replace 1 with the desired border width
                     }}                    boxType='square'
                     value={toggleCheckBox}
                     onValueChange={(newValue, index) =>  handleDelete() }

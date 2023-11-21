@@ -40,9 +40,6 @@ export const addReminder = (selectedButton, selectedDropdownContact, selectedDro
   export const toggleTimeFetching = (targetTime) => {
     return async (dispatch, getState) => {
       try {
-     
-          // Log the correct variable, which is 'newTime'
-          console.log(targetTime, '33reminderTime');
           dispatch({
             type: 'UPDATE_REMINDER_TIME',
             payload: targetTime, // Corrected payload to update the reminder time
@@ -118,16 +115,14 @@ export const fetchAndAddContacts = () => {
       // Retrieve existing contacts from AsyncStorage
       const existingContactsString = await AsyncStorage.getItem('storedContacts');
       const existingContacts = JSON.parse(existingContactsString) || []; 
-      console.log(existingContacts,'existingContacts')
 
       // Compare new contacts with existing contacts
       const newContactsToAdd = getNewContacts(existingContacts, newContacts);
-      console.log(newContactsToAdd,'newContactsToAdd')
       const backgroundFetchingEnabled = getState().settings.backgroundFetchingEnabled;
       const reminderTime = getState().ToggleTime.reminderTime;
      
 
-      console.log(backgroundFetchingEnabled,'backgroundFetchingEnabled')
+      // console.log(backgroundFetchingEnabled,'backgroundFetchingEnabled')
       if (newContactsToAdd.length > 0) {
         // Dispatch action to add new contacts
         newContactsToAdd.forEach((newContact) => {
