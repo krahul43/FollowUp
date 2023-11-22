@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Text, View, StyleSheet, Dimensions, TouchableOpacity, Image, Platform } from "react-native";
 import Modal from "react-native-modal";
 import moment from 'moment';
-import PushNotification, { Importance } from 'react-native-push-notification';
-import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import notifee, { AuthorizationStatus } from '@notifee/react-native';
 
 const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -13,29 +12,49 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
     : messageTitle === 'Text' ? "Send a quick text to " + messageContact + " and catch up on the latest news!"
       : messageTitle === 'Meet' ? "Your meeting with " + messageContact + " is scheduled. Be prepared!"
         : "Just a friendly reminder ";
-      
+
+
+        useEffect(() => {
+          const requestUserPermission = async () => {
+            try {
+              const settings = await notifee.requestPermission();
+        
+              if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+                // console.log('Permission settings:', settings);
+              } else {
+                // console.log('User declined permissions');
+              }
+            } catch (error) {
+              // console.error('Error requesting permission:', error);
+            }
+          };
+        
+          const setupNotificationPermissions = async () => {
+            await requestUserPermission();
+        
+            try {
+              await notifee.requestPermission({
+                sound: true,
+                announcement: true,
+                inAppNotificationSettings: true,
+                // ... other permission settings
+              });
+            } catch (error) {
+              // console.error('Error setting up notification permissions:', error);
+            }
+          };
+        
+          setupNotificationPermissions();
+        
+          // Return a cleanup function (clearInterval requires an interval ID)
+          
+        }, []);
+        
+
+
 
   useEffect(() => {
-    const onNotificationReceivedForeground = (notification) => {
-      // Handle foreground notifications here
-      // You can customize this based on your requirements
-      console.log('Foreground notification:', notification);
-    };
-
-    // Add the event listener and provide the callback function
-    PushNotificationIOS.addEventListener('notification', onNotificationReceivedForeground);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      PushNotificationIOS.removeEventListener('notification', onNotificationReceivedForeground);
-    };
-  }, []);
-
-  
-  
-
-  useEffect(() => {
-    const checkReminderTime = () => {
+    const checkReminderTime = async() => {
       const currentTime = moment();
 
       // Check if the current time is within a small time range around the reminder time
@@ -45,42 +64,25 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
       if (currentTime.isBetween(timeRangeStart, timeRangeEnd)) {
         setModalVisible(true);
 
+        // Create a channel (required for Android)
+        const channelId = await notifee.createChannel({
+          id: 'default',
+          name: 'Default Channel',
+        })
 
-
-        if (Platform.OS === 'android') {
-          PushNotification.createChannel(
-            {
-              channelId: "com.followup", // (required)
-              channelName: "My channel", // (required)
-              channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
-              playSound: false, // (optional) default: true
-              soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
-              importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-              vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+        // Trigger the notification using notifee
+        notifee.displayNotification({
+          title: `FollowUp ${messageTitle} Reminder`,
+          body: description,
+          android: {
+            channelId,// Specify your channel ID
+            // smallIcon: 'name-of-a-small-icon', // Specify the small icon
+            pressAction: {
+              id: 'default',
             },
-            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
-          );
+          },
+        });
 
-          PushNotification.localNotification({
-            channelId: "com.followup", // (required)
-            channelName: "My channel", // (required)
-            title: `${messageTitle} Reminder`,
-            message: description
-          });
-        }
-        if (Platform.OS === 'ios') {
-
-          if (Platform.OS === 'ios') {
-            // Remove the channel creation block for iOS
-            PushNotificationIOS.addNotificationRequest({
-              alertTitle: `${messageTitle} Reminder`,
-              alertBody: description,
-            });
-          }
-
-
-
-        }
         // Automatically close the modal after one minute (adjust as needed)
         setTimeout(() => {
           setModalVisible(false);
@@ -91,8 +93,10 @@ const HomePopUp = ({ dataModal, reminderTime, mainData }) => {
     };
 
     const intervalId = setInterval(checkReminderTime, 5000); // Check every 5 seconds (adjust as needed)
-    return () => clearInterval(intervalId);
+
+    return () => clearInterval(intervalId); // Cleanup function
   }, [dataModal, reminderTime]);
+
 
   return (
 

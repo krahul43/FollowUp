@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@notifee/react-native": "^7.8.0",
     "@react-native-async-storage/async-storage": "^1.19.4",
     "@react-native-community/checkbox": "^0.5.16",
     "@react-native-community/datetimepicker": "^7.6.1",
