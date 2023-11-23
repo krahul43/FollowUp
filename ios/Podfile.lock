@@ -303,10 +303,15 @@ PODS:
   - React-jsinspector (0.70.14)
   - React-logger (0.70.14):
     - glog
+  - react-native-background-actions (3.0.1):
+    - React-Core
   - react-native-contacts (7.0.7):
     - React-Core
   - react-native-safe-area-context (4.7.4):
     - React-Core
+  - react-native-track-player (4.0.1):
+    - React-Core
+    - SwiftAudioEx (= 1.0.0)
   - React-perflogger (0.70.14)
   - React-RCTActionSheet (0.70.14):
     - React-Core/RCTActionSheetHeaders (= 0.70.14)
@@ -393,6 +398,7 @@ PODS:
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.1)
+  - SwiftAudioEx (1.0.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -444,8 +450,10 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-background-actions (from `../node_modules/react-native-background-actions`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-track-player (from `../node_modules/react-native-track-player`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -484,6 +492,7 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - SocketRocket
+    - SwiftAudioEx
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -529,10 +538,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-background-actions:
+    :path: "../node_modules/react-native-background-actions"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-track-player:
+    :path: "../node_modules/react-native-track-player"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -610,8 +623,10 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 03144eeee729e6a6cb8d7ff2d5653b67315f8f31
   React-jsinspector: 6538dfb58970d1fb9d89c9c34e87713ece6c3cf0
   React-logger: 4e9c3f888b4b5bb72a3ac7f1be7929e776181016
+  react-native-background-actions: ecffd3f0864140ef6cf21c29be6819a02b531a52
   react-native-contacts: 61971364bf9f11a846587eeb736a4e65632815d4
   react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
+  react-native-track-player: 97d76dbbd35f27cc709e5f04540615e54264b3f9
   React-perflogger: 74b2d33200b8c26440c2c39b87a4177d8404655f
   React-RCTActionSheet: 3fdf6b3a85f2ea4b365b267efd9c82aaeb20fe33
   React-RCTAnimation: 9659d5ed57ccbd129516486b2cce38e536841337
@@ -632,6 +647,7 @@ SPEC CHECKSUMS:
   RNPermissions: d3514ae6414ea6a3a46c1097f2f21491a82f8934
   RNScreens: 2b19e2471db8a581c83f381f4ea5d43071c9a3bf
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  SwiftAudioEx: 6f511018b7a0fdfd14ed1bb4081f953588245cc0
   Yoga: 56413d530d1808044600320ced5baa883acedc44
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

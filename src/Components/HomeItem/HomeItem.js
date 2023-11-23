@@ -1,6 +1,6 @@
 
-import React, { useState, createRef,useCallback } from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet,Platform,Linking } from 'react-native';
+import React, { useState, createRef, useCallback } from 'react';
+import { View, Image, Text, TouchableOpacity, StyleSheet, Platform, Linking } from 'react-native';
 import { Dimensions } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Snooze from '../Snooze/Snooze';
@@ -20,7 +20,7 @@ const HomeItem = ({ item, index }) => {
     const actionSheetEditReminder = createRef()
     const [toggleCheckBox, setToggleCheckBox] = useState(false)
     const dispatch = useDispatch();
-   const [deletePending, setDeletePending] = useState(false);
+    const [deletePending, setDeletePending] = useState(false);
 
     const handleDelete = () => {
         setDeletePending(true);
@@ -28,11 +28,11 @@ const HomeItem = ({ item, index }) => {
         setTimeout(() => {
             dispatch(deleteReminder(index));
             setDeletePending(false);
-        }, 1500); 
+        }, 1500);
     };
-    
+
     const selectedDropdownReminder = item.selectedDropdownReminder; // Replace this with your time
-   
+
     function formatTime(selectedDropdownReminder) {
         const reminderTime = moment(selectedDropdownReminder);
         let output;
@@ -43,89 +43,92 @@ const HomeItem = ({ item, index }) => {
         } else {
             output = reminderTime.format('MMM D, h:mm A');
         }
-    
+
         return output;
     }
     const formattedTimeRemaining = formatTime(selectedDropdownReminder);
     const reminderTime = moment(selectedDropdownReminder);
     const textColor = moment().isAfter(reminderTime) ? 'red' : 'black';
     // const [textColor, setTextColor] = useState(moment().isAfter(reminderTime) ? 'red' : 'black');
-    const modalOpen= moment().isSame(reminderTime) ? 'true' : 'false';
-    
+    const modalOpen = moment().isSame(reminderTime) ? 'true' : 'false';
+
     const openContactsApp = async () => {
         // For Android
         if (Platform.OS === 'android') {
-          try {
-            await Linking.openURL('content://contacts/people');
-      
-              } catch (error) {
-            console.error('Error opening contacts app:', error);
-          }
+            try {
+                await Linking.openURL('content://contacts/people');
+
+            } catch (error) {
+                console.error('Error opening contacts app:', error);
+            }
         }
         // For iOS
         else if (Platform.OS === 'ios') {
-          try {
-            await Linking.openSettings();
-             } catch (error) {
-            console.error('Error opening contacts app:', error);
-          }
+            try {
+                await Linking.openSettings();
+            } catch (error) {
+                console.error('Error opening contacts app:', error);
+            }
         }
-      };
-      
-      // Example usage
-      const handlePress = useCallback(async () => {
+    };
+
+    // Example usage
+    const handlePress = useCallback(async () => {
         await openContactsApp();
-      }, []);
+    }, []);
     return (
         <>
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.txtContainer} onPress={()=> handlePress()}>
-                <ImageBox item={item} />
-                <View>
-                    <Text style={styles.name}>{item.selectedDropdownContact}</Text>
-                    <Text style={[styles.time,{color:textColor}]}>{formattedTimeRemaining}</Text>
-                </View>
-            </TouchableOpacity>
-            <View style={styles.buttnMain}>
-                <CheckBox
-                    // onFillColor={{ true: '#000', false: '#0a8960' }}
-                    tintColors={{true: '#0a8960', false:  '#000'}}
-                    style={{
-                        transform: [{ scaleX: Platform.OS === 'ios' ? 1.0 : 2.1 }, { scaleY: Platform.OS === 'ios' ? 1.0 : 2.02 }],
-                        borderColor: 'red', // replace 'yourBorderColor' with the color you want
-                        borderWidth: 0.5, // replace 1 with the desired border width
-                    }}                    boxType='square'
-                    value={toggleCheckBox}
-                    onValueChange={(newValue, index) =>  handleDelete() }
-                />
-                <Snooze TimeData={item} />
-                <TouchableOpacity
-                    style={[styles.touchableOpacityView, { borderColor: '#000' }]}
-                    onPress={() => actionSheetEditReminder.current?.show()}
-                >
-                    <Image
-                        source={require('../../assets/pencil.png')}
-                        style={styles.anotherImage1}
-                    />
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.txtContainer} onPress={() => handlePress()}>
+                    <ImageBox item={item} />
+                    <View>
+                        <Text style={styles.name}>
+                            {item.selectedDropdownContact.length > 15
+                                ? `${item.selectedDropdownContact.slice(0, 15)}...`
+                                : item.selectedDropdownContact}</Text>
+                        <Text style={[styles.time, { color: textColor }]}>{formattedTimeRemaining}</Text>
+                    </View>
                 </TouchableOpacity>
-                <BottomActionSheet
-                    containerStyle={{
-                        borderTopLeftRadius: 25,
-                        borderTopRightRadius: 25
-                    }}
-                    indicatorStyle={{
-                        width: 100
-                    }}
-                    gestureEnabled={true}
-                    ref={actionSheetEditReminder} title={'Title'}>
-                    <EditReminder actionSheetEditReminder={actionSheetEditReminder}
-                        reminderData={item} />
+                <View style={styles.buttnMain}>
+                    <CheckBox
+                        // onFillColor={{ true: '#000', false: '#0a8960' }}
+                        tintColors={{ true: '#0a8960', false: '#000' }}
+                        style={{
+                            transform: [{ scaleX: Platform.OS === 'ios' ? 1.0 : 2.1 }, { scaleY: Platform.OS === 'ios' ? 1.0 : 2.02 }],
+                            borderColor: 'red', // replace 'yourBorderColor' with the color you want
+                            borderWidth: 0.5, // replace 1 with the desired border width
+                        }} boxType='square'
+                        value={toggleCheckBox}
+                        onValueChange={(newValue, index) => handleDelete()}
+                    />
+                    <Snooze TimeData={item} />
+                    <TouchableOpacity
+                        style={[styles.touchableOpacityView, { borderColor: '#000' }]}
+                        onPress={() => actionSheetEditReminder.current?.show()}
+                    >
+                        <Image
+                            source={require('../../assets/pencil.png')}
+                            style={styles.anotherImage1}
+                        />
+                    </TouchableOpacity>
+                    <BottomActionSheet
+                        containerStyle={{
+                            borderTopLeftRadius: 25,
+                            borderTopRightRadius: 25
+                        }}
+                        indicatorStyle={{
+                            width: 100
+                        }}
+                        gestureEnabled={true}
+                        ref={actionSheetEditReminder} title={'Title'}>
+                        <EditReminder actionSheetEditReminder={actionSheetEditReminder}
+                            reminderData={item} />
 
-                </BottomActionSheet>
+                    </BottomActionSheet>
+                </View>
+
             </View>
-            
-        </View>
-        <HomePopUp dataModal={modalOpen} reminderTime={reminderTime} mainData={item}/>
+            <HomePopUp dataModal={modalOpen} reminderTime={reminderTime} mainData={item} />
         </>
     );
 };
