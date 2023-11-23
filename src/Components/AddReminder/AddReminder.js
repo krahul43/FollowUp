@@ -74,6 +74,8 @@ const AddReminder = ({ actionSheetBrand }) => {
             const daysToAdd = parseInt(value); // Extract the number of days to add
             const targetTime = new Date(currentTime.getTime() + daysToAdd * 24 * 60 * 60 * 1000); // Add days in milliseconds
             setTimeAdded(targetTime);
+        }else if (value === 'Add Other') {
+               setTimeAdded(null);
         } else {
             // Handle other time intervals (e.g., minutes, hours)
             const timeValue = parseInt(value);
@@ -142,7 +144,7 @@ const AddReminder = ({ actionSheetBrand }) => {
                 />
             </View>
            
-            {selectedButton !== null && selectedDropdownContact !== null && selectedDropdownReminder !== null && (
+            {selectedButton !== null && selectedDropdownContact !== null && selectedDropdownReminder !== null && timeAdded !==null && (
             <TouchableOpacity onPress={() => {handleSaveToStorage(),actionSheetBrand.current?.hide() }} style={styles.button}>
                 <Text style={styles.text}>Add</Text>
             </TouchableOpacity>

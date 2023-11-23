@@ -16,26 +16,23 @@ const AddDatePicker = ({onseslected}) => {
       };
     
       const handleConfirm = (date) => {
-        onseslected(date)
-        const dateString = new Date(date).toLocaleString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          timeZone: 'UTC', // Adjust the time zone as needed
-        });
-        setTimePick(dateString)
+        onseslected(date);
+        const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+
+        const formattedDate = new Date(date).toLocaleDateString('en-US', dateOptions);
+        const formattedTime = new Date(date).toLocaleTimeString('en-US', timeOptions);
+
+        const dateString = `${formattedDate} ${formattedTime}`;
+        setTimePick(dateString);
         hideDatePicker();
-      };
+    };
   return (
     <TouchableOpacity style={styles.container} onPress={showDatePicker}>
       <Text style={styles.txt}>{timePick ? timePick:'choose Time'} </Text>
-      {/* <Button title="Show Date Picker" onPress={showDatePicker} /> */}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode="date"
+        mode="datetime"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />

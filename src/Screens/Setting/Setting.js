@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import ToggleSwitch from 'toggle-switch-react-native'
 import DropdownItem from '../../Components/DropdownItem/DropdownItem'
 import ReminderTime from '../../Components/ReminderTime/ReminderTime'
-import { ReminderTimeData } from '../../Components/StaticData/StaticData'
+import { settingReminderTimeData } from '../../Components/StaticData/StaticData'
 import Contacts from 'react-native-contacts';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ const Setting = ({ navigation }) => {
     const backgroundFetchingEnabled = useSelector(state => state.settings.backgroundFetchingEnabled);
     const [toggleCheckBox, setToggleCheckBox] = useState(backgroundFetchingEnabled);
     const [permissionGranted, setPermissionGranted] = useState(false);
-    const [staticData, setStaticData] = useState(ReminderTimeData);
+    const [staticData, setStaticData] = useState(settingReminderTimeData);
     const [selectedTime, setSelectedTime] = useState();
     const dispatch = useDispatch();
     const contacts = useSelector(state => state.contacts.contacts);
@@ -177,19 +177,19 @@ const Setting = ({ navigation }) => {
                 </View>
                 <View style={styles.dptxtView}>
                     <Text style={styles.dptxt}>Reminder 2:</Text>
-                    <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
+                    <DropdownItem dropdownData={settingReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
                 </View>
                 <View style={styles.dptxtView}>
                     <Text style={styles.dptxt}>Reminder 3:</Text>
-                    <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
+                    <DropdownItem dropdownData={settingReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
                 </View>
                 <View style={styles.dptxtView}>
                     <Text style={styles.dptxt}>Reminder 4:</Text>
-                    <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
+                    <DropdownItem dropdownData={settingReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
                 </View>
                 <View style={styles.dptxtView}>
                     <Text style={styles.dptxt}>Reminder 5:</Text>
-                    <DropdownItem dropdownData={ReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
+                    <DropdownItem dropdownData={settingReminderTimeData} placeholder='Select Time' onValueChange={handleDropdownReminder} />
                 </View>
                 <Text style={[styles.toggtxt, { textAlign: "left", marginLeft: 25, marginTop: 50 }]}>Reminder Times</Text>
                 <ReminderTime txt={'15 minutes'} />

@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateReminder } from '../../redux/reminderActions/reminderActions';
 import moment from 'moment';
+import AddDatePicker from '../AddDatePicker/AddDatePicker';
 
 const EditReminder = ({ actionSheetEditReminder, reminderData }) => {
     const [contacts, setContacts] = useState([]);
@@ -45,47 +46,6 @@ const EditReminder = ({ actionSheetEditReminder, reminderData }) => {
             return null;
         }
     };
-    // useEffect(() => {
-    //     if (reminderData) {
-    //         setSelectedButton(reminderData.selectedButton);
-    //         setSelectedDropdownContact(reminderData.selectedDropdownContact);
-
-    //         const currentTime = new Date().getTime();
-    //         const reminderTimeString = reminderData.selectedDropdownReminder;
-
-    //         // Assuming reminderTimeString is in format '3:28:29 PM'
-    //         const reminderDate = new Date();
-    //         const [time, period] = reminderTimeString.split(' '); // Split time and AM/PM
-    //         const [hours, minutes, seconds] = time.split(':').map(num => parseInt(num)); // Extract hours, minutes, and seconds
-
-    //         let hour = hours;
-    //         if (period === 'PM' && hours !== 12) {
-    //             hour += 12; // Convert to 24-hour format if PM (except for 12 PM)
-    //         } else if (period === 'AM' && hours === 12) {
-    //             hour = 0; // Convert 12 AM to 0 hours
-    //         }
-
-    //         reminderDate.setHours(hour, minutes, seconds, 0);
-
-    //         const reminderTime = reminderDate.getTime();
-
-    //         // Calculate the remaining time using the obtained reminderTime and currentTime
-    //         const timeDifference = reminderTime - currentTime;
-
-    //         const remainingTime = timeDifference > 0 ? timeDifference : 0;
-
-    //         // You can format remainingTime as needed for display
-    //         const remainingHours = Math.floor(remainingTime / (1000 * 60 * 60));
-    //         const remainingMinutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-
-    //         const selectedReminderInterval = remainingHours > 0 ? `${remainingHours} hours` : '';
-    //         const minutesText = remainingMinutes > 0 ? `${remainingMinutes} minutes` : '';
-
-    //         setSelectedDropdownReminder(selectedReminderInterval + (selectedReminderInterval && minutesText ? ' and ' : '') + minutesText);
-    //     }
-    // }, [reminderData]);
-
-
 
 
     useEffect(() => {
@@ -137,6 +97,8 @@ const EditReminder = ({ actionSheetEditReminder, reminderData }) => {
             const daysToAdd = parseInt(value); // Extract the number of days to add
             const targetTime = new Date(currentTime.getTime() + daysToAdd * 24 * 60 * 60 * 1000); // Add days in milliseconds
             setTimeAdded(targetTime);
+        } else if (value === 'Add Other') {
+            setTimeAdded(null);
         } else {
             // Handle other time intervals (e.g., minutes, hours)
             const timeValue = parseInt(value);
@@ -145,6 +107,10 @@ const EditReminder = ({ actionSheetEditReminder, reminderData }) => {
             setTimeAdded(newTime);
         }
     };
+    const handleAnotherTime=(onseslected)=>{
+        setTimeAdded(onseslected)
+
+    }
     const handleButtonSelect = (button) => {
         if (selectedButton === button) {
             setSelectedButton(null);
@@ -180,6 +146,8 @@ const EditReminder = ({ actionSheetEditReminder, reminderData }) => {
                     onValueChange={handleDropdownReminder}
                     Editvalue={selectedDropdownReminder} />
             </View>
+            {selectedDropdownReminder ==='Add Other' && <AddDatePicker onseslected={handleAnotherTime}/>}
+
             <View style={styles.imgView}>
                 <AddReminderImage
                     ReminderImage={require('../../assets/message.png')}
