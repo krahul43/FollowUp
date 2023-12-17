@@ -305,9 +305,9 @@ PODS:
     - glog
   - react-native-background-actions (3.0.1):
     - React-Core
-  - react-native-contacts (7.0.7):
+  - react-native-contacts (7.0.8):
     - React-Core
-  - react-native-safe-area-context (4.7.4):
+  - react-native-safe-area-context (4.8.1):
     - React-Core
   - react-native-track-player (4.0.1):
     - React-Core
@@ -378,23 +378,23 @@ PODS:
     - React-jsi (= 0.70.14)
     - React-logger (= 0.70.14)
     - React-perflogger (= 0.70.14)
-  - RNCAsyncStorage (1.19.4):
+  - RNCAsyncStorage (1.21.0):
     - React-Core
   - RNCCheckbox (0.5.16):
     - BEMCheckBox (~> 1.4)
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
-  - RNDateTimePicker (7.6.1):
+  - RNDateTimePicker (7.6.2):
     - React-Core
-  - RNNotifee (7.8.0):
+  - RNNotifee (7.8.2):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.8.0)
-  - RNNotifee/NotifeeCore (7.8.0):
+    - RNNotifee/NotifeeCore (= 7.8.2)
+  - RNNotifee/NotifeeCore (7.8.2):
     - React-Core
-  - RNPermissions (3.10.1):
+  - RNPermissions (4.0.1):
     - React-Core
-  - RNScreens (3.27.0):
+  - RNScreens (3.29.0):
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.1)
@@ -624,8 +624,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 6538dfb58970d1fb9d89c9c34e87713ece6c3cf0
   React-logger: 4e9c3f888b4b5bb72a3ac7f1be7929e776181016
   react-native-background-actions: ecffd3f0864140ef6cf21c29be6819a02b531a52
-  react-native-contacts: 61971364bf9f11a846587eeb736a4e65632815d4
-  react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
+  react-native-contacts: cb4f3b823550adbce0802901b9e63bf1526ec0af
+  react-native-safe-area-context: cd1169d797a2ef722a00bfc5af10748d5b6c94f9
   react-native-track-player: 97d76dbbd35f27cc709e5f04540615e54264b3f9
   React-perflogger: 74b2d33200b8c26440c2c39b87a4177d8404655f
   React-RCTActionSheet: 3fdf6b3a85f2ea4b365b267efd9c82aaeb20fe33
@@ -639,18 +639,18 @@ SPEC CHECKSUMS:
   React-RCTVibration: d293c50100c0927379e6a80fab86a219e08792ae
   React-runtimeexecutor: 0d01d03375f996484fcc231ccca3fe604a4a5652
   ReactCommon: dce64235f8548b6e4758647310145f5356c8d0cb
-  RNCAsyncStorage: 3a8f7145d17cdd9f88e7b77666c94a09e4f759c8
+  RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
   RNCCheckbox: 75255b03e604bbcc26411eb31c4cbe3e3865f538
   RNCPushNotificationIOS: 64218f3c776c03d7408284a819b2abfda1834bc8
-  RNDateTimePicker: 8fb39263b721223e095248acaf6f406d5b7f6713
-  RNNotifee: f3c01b391dd8e98e67f539f9a35a9cbcd3bae744
-  RNPermissions: d3514ae6414ea6a3a46c1097f2f21491a82f8934
-  RNScreens: 2b19e2471db8a581c83f381f4ea5d43071c9a3bf
+  RNDateTimePicker: fc2e4f2795877d45e84d85659bebe627eba5c931
+  RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
+  RNPermissions: d0f576cb779f84d64b96932268462bd50f5d0e1c
+  RNScreens: fa9b582d85ae5d62c91c66003b5278458fed7aaa
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SwiftAudioEx: 6f511018b7a0fdfd14ed1bb4081f953588245cc0
   Yoga: 56413d530d1808044600320ced5baa883acedc44
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 85d7d457ea35f78e7ff06cb44f35d0c4fee49217
+PODFILE CHECKSUM: bb47f4e651d585abe6e34f42a6ce18fbd39e66de
 
 COCOAPODS: 1.14.3

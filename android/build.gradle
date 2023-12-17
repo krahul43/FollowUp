@@ -2,9 +2,9 @@
 
 buildscript {
     ext {
-           googlePlayServicesVersion = "+"
+          googlePlayServicesVersion = "+"
          firebaseMessagingVersion = "21.1.0"
-        buildToolsVersion = "31.0.0"
+        buildToolsVersion = "33.0.0"
         minSdkVersion = 21
         compileSdkVersion = 33
         targetSdkVersion = 33
@@ -20,10 +20,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-       
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.2")
+        classpath("com.android.tools.build:gradle:7.2.1")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("de.undercouch:gradle-download-task:5.0.1")
         // NOTE: Do not place your application dependencies here; they belong
@@ -50,6 +49,5 @@ allprojects {
         }
         google()
         maven { url 'https://www.jitpack.io' }
-        
     }
 }

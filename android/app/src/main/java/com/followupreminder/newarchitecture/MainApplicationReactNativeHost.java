@@ -1,4 +1,4 @@
-package com.followup.newarchitecture;
+package com.followupreminder.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.followup.BuildConfig;
-import com.followup.newarchitecture.components.MainComponentsRegistry;
-import com.followup.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.followupreminder.BuildConfig;
+import com.followupreminder.newarchitecture.components.MainComponentsRegistry;
+import com.followupreminder.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
